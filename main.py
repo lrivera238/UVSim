@@ -10,6 +10,24 @@ def Subtract(opperand):
     global accumulator
     accumulator -= int(opperand)
 
+def Branch(operand):
+    global instruction_pointer
+    instruction_pointer = int(operand)
+
+def BranchNeg(operand):
+    global instruction_pointer
+    if accumulator < 0:
+        instruction_pointer = int(operand)
+
+def BranchZero(operand):
+    global instruction_pointer
+    if accumulator == 0:
+        instruction_pointer = int(operand)
+
+def Halt():
+    print("Program halted.")
+    exit()
+
 def main():
     global memory, accumulator, instruction_pointer
     file_path = input("Enter the file path: ")
@@ -77,6 +95,7 @@ def main():
                     print(operand)
                     # BranchZero(opperand)
                 case "43":
+                    Halt()
                     return
                 case _:
                     print(f"Invalid instruction {line} on line {instruction_pointer + 1}")
