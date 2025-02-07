@@ -7,7 +7,6 @@ class TestUVSim(unittest.TestCase):
         self.assertTrue(main.memory[0] == "")
         main.load_to_memory("tests/Test1.txt")
         self.assertTrue(main.memory[0] != "")
-        
 
 if __name__ == "__main__":
     unittest.main()
