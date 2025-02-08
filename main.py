@@ -2,6 +2,25 @@ memory = ["" for _ in range(100)]
 accumulator = 0
 instruction_pointer = 0
 
+def Read(opperand):
+    data = input("Please enter an input line: ")
+    try:
+        data = int(data)
+    except ValueError:
+        raise ValueError("Invalid input")
+    if data % 10000 != 0:
+        raise ValueError("Invalid input")
+    memory[opperand] = data
+
+def Write(opperand):
+    print(memory[opperand])
+
+def Load(opperand):
+    accumulator = memory[opperand]
+
+def Store(opperand):
+    memory[opperand] = accumulator
+
 def Add(opperand):
     global accumulator
     accumulator += int(opperand)
