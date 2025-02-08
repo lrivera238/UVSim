@@ -8,7 +8,7 @@ def Read(opperand):
         data = int(data)
     except ValueError:
         raise ValueError("Invalid input")
-    if data % 10000 != 0:
+    if data // 10000 != 0:
         raise ValueError("Invalid input")
     memory[opperand] = data
 
@@ -16,9 +16,11 @@ def Write(opperand):
     print(memory[opperand])
 
 def Load(opperand):
+    global accumulator
     accumulator = memory[opperand]
 
 def Store(opperand):
+    global accumulator
     memory[opperand] = accumulator
 
 def Add(opperand):
