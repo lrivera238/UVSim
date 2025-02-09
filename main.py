@@ -30,6 +30,14 @@ def Add(opperand):
 def Subtract(opperand):
     global accumulator
     accumulator -= int(opperand)
+    
+def Divide(operand):
+    global accumulator
+    accumulator /= int(operand)
+    
+def Multiply(operand):
+    global accumulator
+    accumulator *= int(operand)
 
 def Branch(operand):
     global instruction_pointer
@@ -59,10 +67,10 @@ def load_to_memory(file_path):
                 instruction_pointer += 1
                 if instruction_pointer >= 100:
                     print("You've entered more than 100 commands, programm terminated")
-                    return
+                    exit()
             except ValueError:
                 print(f"Invalid instruction {line} on line {instruction_pointer + 1}")
-                return
+                exit()
     instruction_pointer = 0
     
 def execute_instructions():
@@ -71,7 +79,7 @@ def execute_instructions():
     while instruction_pointer < len(memory):
         if len(memory[instruction_pointer]) > 5:
             print(f"Invalid instruction {memory[instruction_pointer]} on line {instruction_pointer + 1}")
-            return
+            exit()
         try:
             sign = memory[instruction_pointer][0]
             instruction = memory[instruction_pointer][1:3]
@@ -82,7 +90,7 @@ def execute_instructions():
         
         if sign == "-":
             print(f"Invalid instruction {memory[instruction_pointer]} on line {instruction_pointer + 1}")
-            return
+            exit()
         if instruction == "00" and operand == "00":
             continue
         
@@ -100,23 +108,23 @@ def execute_instructions():
             case "31":
                 Subtract(operand)
             case "32":
-                print(operand)
-                # Divide(operand)
+                Divide(operand)
             case "33":
-                print(operand)
-                # Multiply(operand)
+                Multiply(operand)
             case "40":
                 Branch(operand)
+                continue
             case "41":
                 BranchNeg(operand)
+                continue
             case "42":
                 BranchZero(operand)
+                continue
             case "43":
                 Halt()
-                return
             case _:
                 print(f"Invalid instruction {memory[instruction_pointer]} on line {instruction_pointer + 1}")
-                return
+                exit()
             
         instruction_pointer += 1
         
