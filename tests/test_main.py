@@ -38,7 +38,7 @@ class TestUVSim(unittest.TestCase):
         main.execute_instructions()
         self.assertTrue(main.accumulator == 0)
 
-    # Use case 3 Handle I/) Operations
+    # Use case 3 Handle I/O Operations
     @patch('builtins.input', return_value='1234')
     def test_Read_valid_input(self, mock_input):
         main.Read(2)
@@ -66,7 +66,7 @@ class TestUVSim(unittest.TestCase):
         main.Write(3)
         mock_print.assert_called_once_with(-5678)
         
-    # Use case 4 Pergorm Arithmetic Operations
+    # Use case 4 Perform Arithmetic Operations
     def test_Add(self):
         self.reset_main()
         main.Add(4)
