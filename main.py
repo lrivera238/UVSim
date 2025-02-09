@@ -2,34 +2,45 @@ memory = ["" for _ in range(100)]
 accumulator = 0
 instruction_pointer = 0
 
-def Read(opperand):
+def Read(operand):
     data = input("Please enter an input line: ")
     try:
-        data = int(data)
+        data = int(data)  # Convert input to integer
     except ValueError:
-        raise ValueError("Invalid input")
-    if data // 10000 != 0:
-        raise ValueError("Invalid input")
-    memory[opperand] = data
+        raise ValueError("Invalid input: must be an integer")
 
-def Write(opperand):
-    print(memory[opperand])
+    # Validate that the number is within the four-digit signed range (-9999 to 9999)
+    if not (-9999 <= data <= 9999):
+        raise ValueError("Invalid input: must be a four-digit signed number (-9999 to 9999)")
 
-def Load(opperand):
+    memory[int(operand)] = data  # Store in memory
+
+def Write(operand):
+    print(memory[int(operand)])
+
+def Load(operand):
     global accumulator
-    accumulator = memory[opperand]
+    accumulator = memory[int(operand)]
 
-def Store(opperand):
+def Store(operand):
     global accumulator
-    memory[opperand] = accumulator
+    memory[int(operand)] = accumulator
 
-def Add(opperand):
-    global accumulator
-    accumulator += int(opperand)
+def Add(operand):
+    global accumulator, memory
+    accumulator += int(memory[int(operand)])
     
-def Subtract(opperand):
-    global accumulator
-    accumulator -= int(opperand)
+def Subtract(operand):
+    global accumulator, memory
+    accumulator -= int(memory[int(operand)])
+    
+def Divide(operand):
+    global accumulator, memory
+    accumulator /= int(memory[int(operand)])
+    
+def Multiply(operand):
+    global accumulator, memory
+    accumulator *= int(memory[int(operand)])
 
 def Branch(operand):
     global instruction_pointer
@@ -39,11 +50,13 @@ def BranchNeg(operand):
     global instruction_pointer
     if accumulator < 0:
         instruction_pointer = int(operand)
+        return True
 
 def BranchZero(operand):
     global instruction_pointer
     if accumulator == 0:
         instruction_pointer = int(operand)
+        return True
 
 def Halt():
     print("Program halted.")
@@ -59,10 +72,10 @@ def load_to_memory(file_path):
                 instruction_pointer += 1
                 if instruction_pointer >= 100:
                     print("You've entered more than 100 commands, programm terminated")
-                    return
+                    exit()
             except ValueError:
                 print(f"Invalid instruction {line} on line {instruction_pointer + 1}")
-                return
+                exit()
     instruction_pointer = 0
     
 def execute_instructions():
@@ -71,7 +84,7 @@ def execute_instructions():
     while instruction_pointer < len(memory):
         if len(memory[instruction_pointer]) > 5:
             print(f"Invalid instruction {memory[instruction_pointer]} on line {instruction_pointer + 1}")
-            return
+            exit()
         try:
             sign = memory[instruction_pointer][0]
             instruction = memory[instruction_pointer][1:3]
@@ -82,7 +95,7 @@ def execute_instructions():
         
         if sign == "-":
             print(f"Invalid instruction {memory[instruction_pointer]} on line {instruction_pointer + 1}")
-            return
+            exit()
         if instruction == "00" and operand == "00":
             continue
         
@@ -100,23 +113,23 @@ def execute_instructions():
             case "31":
                 Subtract(operand)
             case "32":
-                print(operand)
-                # Divide(operand)
+                Divide(operand)
             case "33":
-                print(operand)
-                # Multiply(operand)
+                Multiply(operand)
             case "40":
                 Branch(operand)
+                continue
             case "41":
-                BranchNeg(operand)
+                if BranchNeg(operand):
+                    continue
             case "42":
-                BranchZero(operand)
+                if BranchZero(operand):
+                    continue
             case "43":
                 Halt()
-                return
             case _:
                 print(f"Invalid instruction {memory[instruction_pointer]} on line {instruction_pointer + 1}")
-                return
+                exit()
             
         instruction_pointer += 1
         
