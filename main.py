@@ -2,42 +2,45 @@ memory = ["" for _ in range(100)]
 accumulator = 0
 instruction_pointer = 0
 
-def Read(opperand):
+def Read(operand):
     data = input("Please enter an input line: ")
     try:
-        data = int(data)
+        data = int(data)  # Convert input to integer
     except ValueError:
-        raise ValueError("Invalid input")
-    if data // 10000 != 0:
-        raise ValueError("Invalid input")
-    memory[opperand] = data
+        raise ValueError("Invalid input: must be an integer")
 
-def Write(opperand):
-    print(memory[opperand])
+    # Validate that the number is within the four-digit signed range (-9999 to 9999)
+    if not (-9999 <= data <= 9999):
+        raise ValueError("Invalid input: must be a four-digit signed number (-9999 to 9999)")
 
-def Load(opperand):
+    memory[int(operand)] = data  # Store in memory
+
+def Write(operand):
+    print(memory[int(operand)])
+
+def Load(operand):
     global accumulator
-    accumulator = memory[opperand]
+    accumulator = memory[int(operand)]
 
-def Store(opperand):
+def Store(operand):
     global accumulator
-    memory[opperand] = accumulator
+    memory[int(operand)] = accumulator
 
-def Add(opperand):
-    global accumulator
-    accumulator += int(opperand)
+def Add(operand):
+    global accumulator, memory
+    accumulator += int(memory[int(operand)])
     
-def Subtract(opperand):
-    global accumulator
-    accumulator -= int(opperand)
+def Subtract(operand):
+    global accumulator, memory
+    accumulator -= int(memory[int(operand)])
     
 def Divide(operand):
-    global accumulator
-    accumulator /= int(operand)
+    global accumulator, memory
+    accumulator /= int(memory[int(operand)])
     
 def Multiply(operand):
-    global accumulator
-    accumulator *= int(operand)
+    global accumulator, memory
+    accumulator *= int(memory[int(operand)])
 
 def Branch(operand):
     global instruction_pointer
@@ -47,11 +50,13 @@ def BranchNeg(operand):
     global instruction_pointer
     if accumulator < 0:
         instruction_pointer = int(operand)
+        return True
 
 def BranchZero(operand):
     global instruction_pointer
     if accumulator == 0:
         instruction_pointer = int(operand)
+        return True
 
 def Halt():
     print("Program halted.")
@@ -115,11 +120,11 @@ def execute_instructions():
                 Branch(operand)
                 continue
             case "41":
-                BranchNeg(operand)
-                continue
+                if BranchNeg(operand):
+                    continue
             case "42":
-                BranchZero(operand)
-                continue
+                if BranchZero(operand):
+                    continue
             case "43":
                 Halt()
             case _:

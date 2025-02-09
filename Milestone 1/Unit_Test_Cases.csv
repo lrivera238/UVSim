@@ -1,0 +1,22 @@
+Test Name,Description,Use Case,Inputs,Expected Output,Success Criteria
+test_memory_initialized,Checks if memory initializes properly,Load Program into Memory,File: tests/Test1.txt,Memory[0] should not be empty,Memory[0] != ''
+test_memory_not_initialized,Ensures memory remains empty if loading fails,Load Program into Memory,File: tests/Test2.txt,Memory[0] should remain empty,Memory[0] == ''
+test_execute_program,Tests execution of a simple program,Execute Program,"Memory[0] = '+3015', Memory[15] = 15",Accumulator should be 15,Accumulator == 15
+test_execute_program_invalid_instruction,Ensures invalid instruction terminates program,Execute Program,Memory[0] = '+30151',Program should exit with SystemExit,Raises SystemExit
+test_Read_valid_input,Tests valid integer input handling,Handle I/O Operations,Input: 1234,Memory[2] should store 1234,Memory[2] == 1234
+test_Read_invalid_input,Ensures non-integer input raises error,Handle I/O Operations,Input: 'notanumber',Should raise ValueError,Raises ValueError
+test_Read_invalid_range_input,Ensures out-of-range input raises error,Handle I/O Operations,Input: 20000,Should raise ValueError,Raises ValueError
+test_Write,Tests correct output display,Handle I/O Operations,Memory[3] = 5678,Should print 5678,Mock print called with 5678
+test_Write_Negative,Tests negative number output,Handle I/O Operations,Memory[3] = -5678,Should print -5678,Mock print called with -5678
+test_Add,Tests addition operation,Perform Arithmetic Operations,"Memory[0] = 4, Accumulator = 0",Accumulator should be 4,Accumulator == 4
+test_Subtract,Tests subtraction operation,Perform Arithmetic Operations,"Memory[0] = 4, Accumulator = 10",Accumulator should be 6,Accumulator == 6
+test_Multiply,Tests multiplication operation,Perform Arithmetic Operations,"Memory[5] = 4, Accumulator = 5",Accumulator should be 20,Accumulator == 20
+test_Divide,Tests division operation,Perform Arithmetic Operations,"Memory[5] = 4, Accumulator = 20",Accumulator should be 5,Accumulator == 5
+test_Load,Tests Load operation,Store and Load Data,Memory[4] = 4321,Accumulator should be 4321,Accumulator == 4321
+test_Store,Tests Store operation,Store and Load Data,Accumulator = 9999,Memory[5] should be 9999,Memory[5] == 9999
+test_Branch,Tests Branch operation,Implement Control Flow,Branch to 05,Instruction pointer should be 5,Instruction pointer == 5
+test_BranchNeg,Tests conditional branching on negative accumulator,Implement Control Flow,Accumulator = -1,Instruction pointer should be 5,Instruction pointer == 5
+test_Halt_Before_Add,Ensures HALT stops execution,Halt Execution,Memory[0] = '+4300',Execution should stop,Raises SystemExit
+test_Invalid_Instruction,Ensures invalid instruction terminates,Detect and Report Errors,Memory[0] = '+9015',Program should exit,Raises SystemExit
+test_Memory_Limit,Ensures program respects 100-word limit,Handle Memory Limits,Generated 150 instructions,Program should not exceed 100 words,Memory length == 100
+test_Read_From_Input_File,Ensures program reads instructions correctly,Read from an Input File,File: tests/Test1.txt,Memory[0] should contain first instruction,Memory[0] == '+3002'

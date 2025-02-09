@@ -33,7 +33,10 @@ class TestUVSim(unittest.TestCase):
     def test_execute_program(self):
         self.reset_main()
         main.memory[0] = "+3015"
-        main.execute_instructions()
+        main.memory[1] = "+4300"
+        main.memory[15] = 15
+        with self.assertRaises(SystemExit):
+            main.execute_instructions()
         self.assertTrue(main.accumulator == 15)
         
     def test_execute_program_invalid_instruction(self):
@@ -74,29 +77,34 @@ class TestUVSim(unittest.TestCase):
     # Use case 4 Perform Arithmetic Operations
     def test_Add(self):
         self.reset_main()
-        main.Add(4)
+        main.memory[0] = 4
+        main.Add("00")
         self.assertEqual(main.accumulator, 4)
         
     def test_Subtract(self):
         self.reset_main()
-        main.Subtract(4)
+        main.memory[0] = 4
+        main.Subtract("00")
         self.assertEqual(main.accumulator, -4)
         
         self.reset_main()
+        main.memory[0] = 4
         main.accumulator = 10
-        main.Subtract(4)
+        main.Subtract("00")
         self.assertEqual(main.accumulator, 6)
         
     def test_Multiply(self):
         self.reset_main()
+        main.memory[5] = 4
         main.accumulator = 5
-        main.Multiply(4)
+        main.Multiply("05")
         self.assertEqual(main.accumulator, 20)
         
     def test_Divide(self):
         self.reset_main()
+        main.memory[5] = 4
         main.accumulator = 20
-        main.Divide(4)
+        main.Divide("05")
         self.assertEqual(main.accumulator, 5)
 
     # Use case 5 Store and Load Data
@@ -162,6 +170,7 @@ class TestUVSim(unittest.TestCase):
     def test_Halt_After_Add(self):
         self.reset_main()
         main.memory[0] = "+3015"
+        main.memory[15] = 15
         main.memory[1] = "+4300"
         with self.assertRaises(SystemExit):
             main.execute_instructions()
@@ -211,7 +220,7 @@ class TestUVSim(unittest.TestCase):
         main.load_to_memory("tests/Test1.txt")
         with self.assertRaises(SystemExit):
                 main.execute_instructions()
-        self.assertEqual(main.memory[0], "+3015")
+        self.assertEqual(main.memory[0], "+3002")
         self.assertEqual(main.memory[1], "+4300")
     
 
