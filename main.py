@@ -64,27 +64,24 @@ def load_to_memory(file_path):
                 print(f"Invalid instruction {line} on line {instruction_pointer + 1}")
                 return
     instruction_pointer = 0
-        
-
-def main(file_path=None):
-    global memory, accumulator, instruction_pointer
-    file_path = input("Enter the file path: ")
     
-    
-    # Load file into memory
-    load_to_memory(file_path)
-        
-    # Execute each instruction   
+def execute_instructions():
+    global memory, instruction_pointer
+     # Execute each instruction   
     while instruction_pointer < len(memory):
         if len(memory[instruction_pointer]) > 5:
-            print(f"Invalid instruction {line} on line {instruction_pointer + 1}")
+            print(f"Invalid instruction {memory[instruction_pointer]} on line {instruction_pointer + 1}")
             return
-        sign = memory[instruction_pointer][0]
-        instruction = memory[instruction_pointer][1:3]
-        operand = memory[instruction_pointer][3:]
+        try:
+            sign = memory[instruction_pointer][0]
+            instruction = memory[instruction_pointer][1:3]
+            operand = memory[instruction_pointer][3:]
+        except:
+            instruction_pointer += 1
+            continue
         
         if sign == "-":
-            print(f"Invalid instruction {line} on line {instruction_pointer + 1}")
+            print(f"Invalid instruction {memory[instruction_pointer]} on line {instruction_pointer + 1}")
             return
         if instruction == "00" and operand == "00":
             continue
@@ -129,8 +126,19 @@ def main(file_path=None):
                 return
             
         instruction_pointer += 1
+        
+
+def main():
+    global memory, accumulator, instruction_pointer
+    file_path = input("Enter the file path: ")
+    
+    # Load file into memory
+    load_to_memory(file_path)
+    
+    # Execute each instruction
+    execute_instructions()
             
-        print("End of program reached without HALT")
+    print("End of program reached without HALT")
 
 if __name__ == "__main__":
     main()
