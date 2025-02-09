@@ -88,41 +88,34 @@ def execute_instructions():
         
         match instruction:
             case "10":
-                print(operand)
-                # Read(opperand)
+                Read(operand)
             case "11":
-                print(operand)
-                # Write(opperand)
+                Write(operand)
             case "20":
-                print(operand)
-                # Load(opperand)
+                Load(operand)
             case "21":
-                print(operand)
-                # Store(opperand)
+                Store(operand)
             case "30":
                 Add(operand)
             case "31":
                 Subtract(operand)
             case "32":
                 print(operand)
-                # Divide(opperand)
+                # Divide(operand)
             case "33":
                 print(operand)
-                # Multiply(opperand)
+                # Multiply(operand)
             case "40":
-                print(operand)
-                # Branch(opperand)
+                Branch(operand)
             case "41":
-                print(operand)
-                # BranchNeg(opperand)
+                BranchNeg(operand)
             case "42":
-                print(operand)
-                # BranchZero(opperand)
+                BranchZero(operand)
             case "43":
                 Halt()
                 return
             case _:
-                print(f"Invalid instruction {line} on line {instruction_pointer + 1}")
+                print(f"Invalid instruction {memory[instruction_pointer]} on line {instruction_pointer + 1}")
                 return
             
         instruction_pointer += 1
