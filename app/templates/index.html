@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrollable 4-Digit Numbers</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h2>Scrollable 4-Digit Numbers</h2>
+    <div class="scroll-container" id="numberList">
+        
+    </div>
+    <button class="generate-button" onclick="generateRandomNumbers()">Generate Numbers</button>
+
+    <script>
+        // Initialize with 100 items of "0000"
+        function initializeNumbers() {
+            // let container = document.getElementById("numberList");
+            // for (let i = 0; i < 100; i++) {
+                // let item = document.createElement("div");
+                // item.className = "number-item";
+                // item.textContent = "0000";
+                // container.appendChild(item);
+            // }
+        }
+
+        // Generate random 4-digit numbers and update the list
+        function generateRandomNumbers() {
+            let items = document.querySelectorAll(".number-item");
+            items.forEach(item => {
+                item.textContent = Math.floor(1000 + Math.random() * 9000); // Generate 4-digit number
+            });
+        }
+
+        // Initialize the list on page load
+        initializeNumbers();
+    </script>
+
+</body>
+</html>
