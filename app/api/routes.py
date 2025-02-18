@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
-from models.uvsim_model import UVSimModel
-from services.uvsim_service import UVSimService
+from Model.UVSimModel import UVSimModel
+from Services.UVSimService import UVSimService
+
 
 uvsim_api = Blueprint('uvsim_api', __name__)
 
