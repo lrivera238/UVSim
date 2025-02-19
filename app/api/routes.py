@@ -9,6 +9,26 @@ uvsim_api = Blueprint('uvsim_api', __name__)
 uvsim_model = UVSimModel()
 uvsim_service = UVSimService(uvsim_model)
 
+#memory
+@uvsim_api.route('/get_memory', methods=['GET'])
+def get_memory():
+    """Returns the current memory state."""
+    return jsonify({"memory": uvsim_model.memory}), 200
+
+def update_memory():
+    """Updates a specific memory location."""
+    data = request.json
+    address = int(data.get('address'))
+    value = data.get('value')
+
+    # Validate memory address
+    if address < 0 or address >= len(uvsim_model.memory):
+        return jsonify({"error": "Invalid memory address"}), 400
+
+    # Store the new value in memory
+    uvsim_model.memory[address] = value
+    return jsonify({"message": f"Memory[{address}] updated to {value}"}), 200
+
 @uvsim_api.route('/load_memory', methods=['POST'])
 def load_memory():
     """Load a set of instructions into memory."""
@@ -16,34 +36,8 @@ def load_memory():
     uvsim_service.load_to_memory(data)
     return jsonify({"message": "Memory loaded successfully"}), 200
 
-@uvsim_api.route('/execute', methods=['POST'])
-def execute():
-    """Execute instructions in memory."""
-    result = uvsim_service.execute()
-    return jsonify({"message": result}), 200
-
-@uvsim_api.route('/reset', methods=['POST'])
-def reset():
-    """Reset the UVSim state."""
-    uvsim_model.reset()
-    return jsonify({"message": "Simulator reset"}), 200
-
-@uvsim_api.route('/read', methods=['POST'])
-def read():
-    """Simulate a READ operation."""
-    operand = request.json.get('operand')
-    value = request.json.get('value')
-    try:
-        uvsim_service.read(operand, value)
-        return jsonify({"message": "Value stored successfully"}), 200
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
-
-@uvsim_api.route('/write/<operand>', methods=['GET'])
-def write(operand):
-    """Simulate a WRITE operation."""
-    try:
-        value = uvsim_service.write(operand)
-        return jsonify({"value": value}), 200
-    except IndexError:
-        return jsonify({"error": "Invalid memory address"}), 400
+# accumulator   
+@uvsim_api.route('/get_accumulator', methods=['GET'])
+def get_accumulator():
+    """Returns the current value of the accumulator."""
+    return jsonify({"accumulator": uvsim_model.accumulator}), 200
