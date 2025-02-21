@@ -25,11 +25,17 @@
         </div>
     </div>
 
-    <!-- Input Container (Hidden Until Needed) -->
-    <div id="input-container" style="display: none;">
+    <!-- Input Modal (Hidden by Default) -->
+<div id="input-modal" class="modal">
+    <div class="modal-content">
+        <h3>Input Required</h3>
+        <p>Enter a value:</p>
         <input type="text" id="user-input" placeholder="Enter a number">
-        <button onclick="submitInput()">Submit</button>
+        <div class="modal-buttons">
+            <button onclick="submitInput()">Submit</button>
+        </div>
     </div>
+</div>
 
     <!-- Buttons -->
     <button onclick="executeInstruction()">Run</button>
