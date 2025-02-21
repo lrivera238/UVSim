@@ -57,6 +57,35 @@ function fetchStatus() {
     .catch(error => console.error('Error fetching status:', error));
 }
 
+// function executeInstruction(userInput = null) {
+//     fetch('/api/step_instruction', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({ input: userInput }) // Send user input if needed
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         console.log(data.message);
+//         document.getElementById('execution-message').innerText = data.message;
+
+//         // Update system status after each instruction
+//         fetchStatus();
+//         fetchMemory();
+
+//         if (data.waitForInput) {
+//             document.getElementById('input-container').style.display = 'block';
+//             document.getElementById('user-input').focus();
+//         } else {
+//             document.getElementById('input-container').style.display = 'none';
+
+//             if (!data.halt) {
+//                 executeInstruction(); // Continue execution automatically
+//             }
+//         }
+//     })
+//     .catch(error => console.error('Error executing instruction:', error));
+// }
+
 function executeInstruction(userInput = null) {
     fetch('/api/step_instruction', {
         method: 'POST',
@@ -70,13 +99,12 @@ function executeInstruction(userInput = null) {
 
         // Update system status after each instruction
         fetchStatus();
+        fetchMemory();
 
         if (data.waitForInput) {
-            document.getElementById('input-container').style.display = 'block';
-            document.getElementById('user-input').focus();
+            showModal(); // Show input modal
         } else {
-            document.getElementById('input-container').style.display = 'none';
-
+            hideModal();
             if (!data.halt) {
                 executeInstruction(); // Continue execution automatically
             }
@@ -85,10 +113,26 @@ function executeInstruction(userInput = null) {
     .catch(error => console.error('Error executing instruction:', error));
 }
 
+function showModal() {
+    let modal = document.getElementById('input-modal');
+    modal.classList.remove('hidden'); // Show modal
+    modal.style.display = 'flex'; // Ensure it's visible
+    document.getElementById('user-input').focus();
+}
+
+function hideModal() {
+    let modal = document.getElementById('input-modal');
+    modal.classList.add('hidden'); // Hide modal
+    modal.style.display = 'none';
+}
+
+
 function submitInput() {
     let userInput = document.getElementById('user-input').value;
-    executeInstruction(userInput);  // Pass input to the execution function
+    hideModal(); // Hide modal after submission
+    executeInstruction(userInput); // Pass input to the execution function
 }
+
 
 function resetSystem() {
     fetch('/api/reset', { method: 'POST' })

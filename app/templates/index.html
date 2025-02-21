@@ -12,27 +12,44 @@
 
     <!-- Execution Message -->
     <p id="execution-message">Click "Run" to start execution.</p>
-
-    <!-- Memory & Status -->
-    <div class="container">
-        <div class="memory-container" id="memoryContainer"></div>
+    
+    <div class="main-content">
+        <div class="memory-wrapper">
+            <div class="memory-container" id="memoryContainer"></div>
+        
+            <!-- Buttons Below Memory Container -->
+            <div class="button-container">
+                <button onclick="executeInstruction()">Run</button>
+                <button onclick="resetSystem()" class="reset-button">Reset</button>
+            </div>
+        </div>
+    
+        <!-- Status Table (Stays to the right of memory-container) -->
         <div class="status-table">
             <h3>System Status</h3>
             <table>
+                <tr><th>Register</th><th>Value</th></tr>
                 <tr><td>Accumulator</td><td id="accumulator">Loading...</td></tr>
-                <tr><td>Step</td><td id="instruction-pointer">Loading...</td></tr>
+                <tr><td>Instruction Pointer</td><td id="instruction-pointer">Loading...</td></tr>
             </table>
         </div>
     </div>
+    
+    
+    
 
-    <!-- Input Container (Hidden Until Needed) -->
-    <div id="input-container" style="display: none;">
-        <input type="text" id="user-input" placeholder="Enter a number">
-        <button onclick="submitInput()">Submit</button>
+
+    <!-- Input Modal (Hidden by Default) -->
+    <div id="input-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Input Required</h3>
+            <p>Enter a value:</p>
+            <input type="text" id="user-input" placeholder="Enter a number">
+            <div class="modal-buttons">
+                <button onclick="submitInput()">Submit</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Buttons -->
-    <button onclick="executeInstruction()">Run</button>
-    <button onclick="resetSystem()" class="reset-button">Reset</button>
 </body>
 </html>
