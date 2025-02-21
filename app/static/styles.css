@@ -4,13 +4,19 @@ body {
     margin: 20px;
 }
 
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: flex-start;
+}
+
 .memory-container {
     width: 300px;
     height: 400px;
     overflow-y: scroll;
     border: 1px solid #ccc;
     padding: 10px;
-    margin: 20px auto;
     background: #f9f9f9;
     border-radius: 5px;
 }
@@ -28,6 +34,31 @@ body {
     text-align: center;
     border: 1px solid #999;
     border-radius: 3px;
+    background-color: white;
+    font-size: 14px;
+}
+
+.memory-input:focus {
+    outline: none;
+    border-color: #007BFF;
+    box-shadow: 0 0 5px #007BFF;
+}
+
+.status-table {
+    border: 2px solid #007BFF;
+    padding: 10px;
+    border-radius: 5px;
+    background: #f8f8f8;
+}
+
+.status-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.status-table th, .status-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
 }
 
 button {
@@ -43,4 +74,19 @@ button {
 
 button:hover {
     background: #0056b3;
+}
+
+.reset-button {
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.reset-button:hover {
+    background: darkred;
 }
