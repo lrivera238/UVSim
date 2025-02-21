@@ -6,11 +6,26 @@ body {
 
 .container {
     display: flex;
-    justify-content: center;
-    gap: 20px;
     align-items: flex-start;
+    gap: 20px;
 }
 
+/* Memory + Status Table Container */
+.main-content {
+    display: flex;
+    align-items: flex-start; /* Keep memory and status aligned at the top */
+    gap: 20px; /* Space between memory and status */
+    justify-content: center;
+}
+
+/* Center align memory-wrapper */
+.memory-wrapper {
+    display: flex;
+    flex-direction: column; /* Stack memory and buttons vertically */
+    align-items: center; /* Center memory container */
+}
+
+/* Memory container styles */
 .memory-container {
     width: 300px;
     height: 400px;
@@ -44,6 +59,7 @@ body {
     box-shadow: 0 0 5px #007BFF;
 }
 
+/* Status table styling */
 .status-table {
     border: 2px solid #007BFF;
     padding: 10px;
@@ -51,6 +67,7 @@ body {
     background: #f8f8f8;
 }
 
+/* Keep status table and buttons separate */
 .status-table table {
     width: 100%;
     border-collapse: collapse;
@@ -59,6 +76,14 @@ body {
 .status-table th, .status-table td {
     padding: 8px;
     border: 1px solid #ddd;
+}
+
+/* Buttons BELOW the memory-container */
+.button-container {
+    display: flex;
+    justify-content: flex-start; /* Left-align buttons */
+    width: 100%; /* Ensure full width to align within memory-wrapper */
+    margin-top: 10px; /* Space between buttons and memory container */
 }
 
 button {
@@ -76,6 +101,7 @@ button:hover {
     background: #0056b3;
 }
 
+/* Reset Button (Aligns to the Right) */
 .reset-button {
     background: red;
     color: white;
@@ -84,7 +110,7 @@ button:hover {
     padding: 10px;
     font-size: 14px;
     cursor: pointer;
-    margin-left: 10px;
+    margin-left: 5px;
 }
 
 .reset-button:hover {
@@ -133,5 +159,9 @@ button:hover {
 
 .modal-buttons button:hover {
     background: #0056b3;
+}
+
+.hidden {
+    display: none;
 }
 

@@ -114,13 +114,18 @@ function executeInstruction(userInput = null) {
 }
 
 function showModal() {
-    document.getElementById('input-modal').style.display = 'flex'; // Show modal
-    document.getElementById('user-input').focus(); // Focus input field
+    let modal = document.getElementById('input-modal');
+    modal.classList.remove('hidden'); // Show modal
+    modal.style.display = 'flex'; // Ensure it's visible
+    document.getElementById('user-input').focus();
 }
 
 function hideModal() {
-    document.getElementById('input-modal').style.display = 'none'; // Hide modal
+    let modal = document.getElementById('input-modal');
+    modal.classList.add('hidden'); // Hide modal
+    modal.style.display = 'none';
 }
+
 
 function submitInput() {
     let userInput = document.getElementById('user-input').value;
