@@ -61,7 +61,6 @@ body {
 
 /* Status table styling */
 .status-table {
-    border: 2px solid #007BFF;
     padding: 10px;
     border-radius: 5px;
     background: #f8f8f8;
@@ -175,4 +174,27 @@ button:hover {
     background-color: lightgrey !important;
     font-weight: bold;
     border: 2px solid red;
+}
+
+/* Execution Console */
+.console-container {
+    width: 300px;
+    height: 150px;
+    background: lightgrey;
+    color: black;
+    font-family: "Courier New", monospace;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-y: auto;
+    border: 2px solid #000000;
+    text-align: left;
+}
+
+.status-table h3{
+    margin-top: 5px;
+    margin-bottom: 5px; /* Remove bottom margin */
+}
+
+.status-table h4 {
+    margin-bottom: 5px; /* Remove bottom margin */
 }

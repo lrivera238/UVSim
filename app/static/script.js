@@ -76,10 +76,14 @@ function executeInstruction(userInput = null) {
     .then(response => response.json())
     .then(data => {
         console.log(data.message);
-        document.getElementById('execution-message').innerText = data.message;
+        
+        if (data.message.includes("Input required") || 
+            data.message.includes("Output") || 
+            data.message.includes("Program halted")) {
+            appendToConsole(data.message);
+        }
 
         fetchMemory(); // Update memory and highlight
-        fetchStatus(); // Update accumulator and pointer
 
         if (data.halt) {
             console.log("Execution halted.");
@@ -97,32 +101,12 @@ function executeInstruction(userInput = null) {
     .catch(error => console.error('Error executing instruction:', error));
 }
 
-function stepInstruction(userInput = null) {
-    isRunning = false; // Stop auto-run mode
-
-    fetch('/api/step_instruction', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ input: userInput })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.message);
-        document.getElementById('execution-message').innerText = data.message;
-
-        fetchMemory(); // Update memory and highlight
-        fetchStatus(); // Update accumulator and pointer
-
-        if (data.halt) {
-            console.log("Execution halted.");
-            return;
-        }
-
-        if (data.waitForInput) {
-            showModal();
-        }
-    })
-    .catch(error => console.error('Error executing instruction:', error));
+function appendToConsole(message) {
+    let consoleElement = document.getElementById('execution-message');
+    let newMessage = document.createElement('div');
+    newMessage.textContent = message;
+    consoleElement.appendChild(newMessage);
+    consoleElement.scrollTop = consoleElement.scrollHeight; // Auto-scroll to latest message
 }
 
 function showModal() {

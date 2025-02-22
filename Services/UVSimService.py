@@ -130,7 +130,6 @@ class UVSimService:
                 if self.branch_zero(operand):
                     return {"message": f"Branching to {operand} because accumulator is zero"}
             case "43":  # Halt
-                self.model.instruction_pointer += 1
                 return {"message": "Program halted.", "halt": True}
             case _:
                 return {"message": f"Invalid instruction {instruction} at {self.model.instruction_pointer}", "halt": True}
