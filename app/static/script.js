@@ -79,6 +79,7 @@ function executeInstruction(userInput = null) {
         
         if (data.message.includes("Input required") || 
             data.message.includes("Output") || 
+            data.message.includes("Invalid") || 
             data.message.includes("Program halted")) {
             appendToConsole(data.message);
         }
