@@ -12,8 +12,6 @@
 
     <!-- Execution Message -->
     
-    <p id="execution-message">Click "Run" to start execution.</p>
-    
     <div class="main-content">
         
         <div class="memory-wrapper">
@@ -22,7 +20,7 @@
             <!-- Buttons Below Memory Container -->
             <div class="button-container">
                 <button onclick="executeInstruction()">Run</button>
-                <button onclick="stepInstruction()" class="step-button">Step</button>
+                <!-- <button onclick="stepInstruction()" class="step-button">Step</button> -->
                 <button onclick="resetSystem()" class="reset-button">Reset</button>
             </div>
             <!-- File Upload Section -->
@@ -40,6 +38,11 @@
                 <tr><td>Accumulator</td><td id="accumulator">Loading...</td></tr>
                 <tr><td>Instruction Pointer</td><td id="instruction-pointer">Loading...</td></tr>
             </table>
+            
+            <h4>Execution Console</h4>
+            <div class="console-container">
+                <div id="execution-message"></div>
+            </div>
         </div>
     </div>
     
