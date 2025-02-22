@@ -65,32 +65,6 @@ function fetchStatus() {
     .catch(error => console.error('Error fetching status:', error));
 }
 
-// function executeInstruction(userInput = null) {
-//     fetch('/api/step_instruction', {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify({ input: userInput }) // Send user input if needed
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         console.log(data.message);
-//         document.getElementById('execution-message').innerText = data.message;
-
-//         // Update system status after each instruction
-//         fetchMemory();
-
-//         if (data.waitForInput) {
-//             showModal(); // Show input modal
-//         } else {
-//             hideModal();
-//             if (!data.halt) {
-//                 executeInstruction(); // Continue execution automatically
-//             }
-//         }
-//     })
-//     .catch(error => console.error('Error executing instruction:', error));
-// }
-
 function executeInstruction(userInput = null) {
     isRunning = true; // Set running state
 
