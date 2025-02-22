@@ -83,7 +83,8 @@ body {
     display: flex;
     justify-content: flex-start; /* Left-align buttons */
     width: 100%; /* Ensure full width to align within memory-wrapper */
-    margin-top: 10px; /* Space between buttons and memory container */
+    margin-top: 5px; /* Space between buttons and memory container */
+    margin-left: 10px;
 }
 
 button {
@@ -99,6 +100,10 @@ button {
 
 button:hover {
     background: #0056b3;
+}
+
+.step-button {
+    margin-left: 5px;
 }
 
 /* Reset Button (Aligns to the Right) */
@@ -165,3 +170,9 @@ button:hover {
     display: none;
 }
 
+/* Highlight the currently executing memory cell */
+.highlight {
+    background-color: lightgrey !important;
+    font-weight: bold;
+    border: 2px solid red;
+}
