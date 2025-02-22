@@ -11,16 +11,24 @@
     <h1>UVSim Execution</h1>
 
     <!-- Execution Message -->
+    
     <p id="execution-message">Click "Run" to start execution.</p>
     
     <div class="main-content">
+        
         <div class="memory-wrapper">
             <div class="memory-container" id="memoryContainer"></div>
         
             <!-- Buttons Below Memory Container -->
             <div class="button-container">
                 <button onclick="executeInstruction()">Run</button>
+                <button onclick="stepInstruction()" class="step-button">Step</button>
                 <button onclick="resetSystem()" class="reset-button">Reset</button>
+            </div>
+            <!-- File Upload Section -->
+            <div class="file-upload">
+                <input type="file" id="file-input" accept=".txt">
+                <button onclick="loadFile()">Load File</button>
             </div>
         </div>
     
@@ -35,10 +43,6 @@
         </div>
     </div>
     
-    
-    
-
-
     <!-- Input Modal (Hidden by Default) -->
     <div id="input-modal" class="modal hidden">
         <div class="modal-content">

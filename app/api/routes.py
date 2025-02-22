@@ -15,20 +15,6 @@ def get_memory():
     """Returns the current memory state."""
     return jsonify({"memory": uvsim_model.memory}), 200
 
-def update_memory():
-    """Updates a specific memory location."""
-    data = request.json
-    address = int(data.get('address'))
-    value = data.get('value')
-
-    # Validate memory address
-    if address < 0 or address >= len(uvsim_model.memory):
-        return jsonify({"error": "Invalid memory address"}), 400
-
-    # Store the new value in memory
-    uvsim_model.memory[address] = value
-    return jsonify({"message": f"Memory[{address}] updated to {value}"}), 200
-
 @uvsim_api.route('/load_memory', methods=['POST'])
 def load_memory():
     """Load a set of instructions into memory."""
@@ -74,6 +60,23 @@ def step_instruction():
 
     result = uvsim_service.step_instruction(user_input)
     return jsonify(result), 200
+
+@uvsim_api.route('/load_file', methods=['POST'])
+def load_file():
+    """Loads a file into memory, ensuring valid formatting."""
+    if 'file' not in request.files:
+        return jsonify({"error": "No file provided"}), 400
+
+    file = request.files['file']
+    content = file.read().decode('utf-8-sig')  # Read as UTF-8, removing BOM
+
+    # Normalize line endings and remove hidden characters
+    instructions = [line.strip() for line in content.splitlines() if line.strip()]
+
+    # Load into memory
+    uvsim_service.load_to_memory(instructions)
+
+    return jsonify({"message": "File loaded into memory successfully"}), 200
 
 # general
 @uvsim_api.route('/reset', methods=['POST'])

@@ -105,6 +105,7 @@ class UVSimService:
                     return {"message": f"Error: {str(e)}", "halt": True}
 
             case "11":  # Write
+                self.model.instruction_pointer += 1
                 return {"message": f"Output: {self.write(operand)}"}
 
             case "20":  # Load
@@ -129,9 +130,10 @@ class UVSimService:
                 if self.branch_zero(operand):
                     return {"message": f"Branching to {operand} because accumulator is zero"}
             case "43":  # Halt
+                self.model.instruction_pointer += 1
                 return {"message": "Program halted.", "halt": True}
-            # case _:
-                # return {"message": f"Invalid instruction {instruction} at {self.model.instruction_pointer}", "halt": True}
+            case _:
+                return {"message": f"Invalid instruction {instruction} at {self.model.instruction_pointer}", "halt": True}
 
         self.model.instruction_pointer += 1  # Move to the next instruction
         if self.model.instruction_pointer >= len(self.model.memory):
