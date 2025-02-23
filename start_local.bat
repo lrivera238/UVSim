@@ -5,32 +5,19 @@ echo -------------------------------------
 :: Check if Python is installed
 where python >nul 2>nul
 if %errorlevel% neq 0 (
-    echo Python is not installed. Installing from runtime.txt...
-    
-    :: Read Python version from runtime.txt
-    for /f "tokens=1 delims=-" %%A in (runtime.txt) do set PYTHON_VERSION=%%A
+    echo Python is not installed. Installing using winget...
 
-    :: Download Python installer
-    set PYTHON_INSTALLER=python-%PYTHON_VERSION%-amd64.exe
-    set PYTHON_URL=https://www.python.org/ftp/python/%PYTHON_VERSION%/%PYTHON_INSTALLER%
-    curl -o %PYTHON_INSTALLER% %PYTHON_URL%
+    :: Install Python using winget
+    winget install --id Python.Python.3.11 -e --source winget
 
-    :: Install Python silently
-    echo Installing Python...
-    start /wait %PYTHON_INSTALLER% /quiet InstallAllUsers=1 PrependPath=1
-
-    :: Cleanup installer
-    del %PYTHON_INSTALLER%
-
-    echo Python installation complete.
-)
-
-:: Verify Python installation
-python --version
-if %errorlevel% neq 0 (
-    echo ERROR: Python installation failed.
-    pause
-    exit /b
+    :: Verify installation
+    python --version
+    if %errorlevel% neq 0 (
+        echo ERROR: Python installation failed.
+        pause
+        exit /b
+    )
+    echo Python installed successfully.
 )
 
 :: Create a virtual environment if it doesn't exist
