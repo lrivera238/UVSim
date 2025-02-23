@@ -1,4 +1,3 @@
-@echo off
 echo Starting Local Flask App...
 echo -------------------------------------
 
