@@ -1,32 +1,9 @@
+call install_python.bat
+call install_pip.bat
+
 @echo off
 echo Starting Local Flask App...
 echo -------------------------------------
-
-:: Check if Python is installed
-
-:: Install Python using winget
-winget install --id Python.Python.3.11 -e --source winget
-
-:: Verify installation
-python --version
-if %errorlevel% neq 0 (
-    echo ERROR: Python installation failed.
-    pause
-    exit /b
-)
-echo Python installed successfully.
-
-:: Ensure pip is installed
-python -m ensurepip --default-pip
-if %errorlevel% neq 0 (
-    echo ERROR: pip installation failed.
-    pause
-    exit /b
-)
-echo pip installed successfully.
-
-:: Upgrade pip to the latest version
-python -m pip install --upgrade pip
 
 :: Create a virtual environment if it doesn't exist
 if not exist venv (
