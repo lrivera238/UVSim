@@ -1,4 +1,17 @@
+@echo off
 call install_python.bat
+
+:: Refresh the environment variables
+echo Refreshing environment variables...
+set PATH=%PATH%;C:\Python\Scripts;C:\Python
+
+:: Clear screen
+cls
+
+:: Restart the script to recognize Python
+cmd /c start "" "%~f0"
+exit
+
 call install_pip.bat
 
 @echo off
