@@ -63,7 +63,7 @@ def step_instruction():
 
 @uvsim_api.route('/load_file', methods=['POST'])
 def load_file():
-    """Loads a file into memory, ensuring valid formatting."""
+    """Loads a file into memory and immediately returns a response."""
     if 'file' not in request.files:
         return jsonify({"error": "No file provided"}), 400
 
@@ -76,7 +76,13 @@ def load_file():
     # Load into memory
     uvsim_service.load_to_memory(instructions)
 
-    return jsonify({"message": "File loaded into memory successfully"}), 200
+    # Force update of memory in the response
+    updated_memory = uvsim_model.memory  # Get latest memory after load
+
+    return jsonify({
+        "message": "File loaded into memory successfully",
+        "memory": updated_memory
+    }), 200
 
 # general
 @uvsim_api.route('/reset', methods=['POST'])

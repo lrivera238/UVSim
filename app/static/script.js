@@ -15,7 +15,7 @@ function updateMemory(address, value) {
 }
 
 function fetchMemory() {
-    fetch(`${API_BASE}/get_memory`)
+    fetch(`${API_BASE}/get_memory?nocache=${new Date().getTime()}`)
     .then(response => response.json())
     .then(data => {
         fetchStatus().then(statusData => {
@@ -57,7 +57,7 @@ function fetchMemory() {
 }
 
 function fetchStatus() {
-    return fetch(`${API_BASE}/get_status`)
+    return fetch(`${API_BASE}/get_status?nocache=${new Date().getTime()}`)
     .then(response => response.json())
     .then(data => {
         document.getElementById('accumulator').innerText = data.accumulator;
