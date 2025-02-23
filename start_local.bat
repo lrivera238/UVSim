@@ -1,20 +1,31 @@
 @echo off
-set PYTHON_VERSION=3.11.6
-set PYTHON_INSTALLER=python-installer.exe
-set PYTHON_URL=https://www.python.org/ftp/python/%PYTHON_VERSION%/python-%PYTHON_VERSION%-amd64.exe
+echo Starting Local Flask App...
+echo -------------------------------------
 
-echo Checking for Python...
+:: Check if Python is installed
 where python >nul 2>nul
 if %errorlevel% neq 0 (
-    echo Python is not installed. Downloading...
+    echo Python is not installed. Installing from runtime.txt...
+    
+    :: Read Python version from runtime.txt
+    for /f "tokens=1 delims=-" %%A in (runtime.txt) do set PYTHON_VERSION=%%A
+
+    :: Download Python installer
+    set PYTHON_INSTALLER=python-%PYTHON_VERSION%-amd64.exe
+    set PYTHON_URL=https://www.python.org/ftp/python/%PYTHON_VERSION%/%PYTHON_INSTALLER%
     curl -o %PYTHON_INSTALLER% %PYTHON_URL%
+
+    :: Install Python silently
     echo Installing Python...
     start /wait %PYTHON_INSTALLER% /quiet InstallAllUsers=1 PrependPath=1
+
+    :: Cleanup installer
     del %PYTHON_INSTALLER%
+
     echo Python installation complete.
 )
 
-echo Verifying Python installation...
+:: Verify Python installation
 python --version
 if %errorlevel% neq 0 (
     echo ERROR: Python installation failed.
@@ -22,23 +33,26 @@ if %errorlevel% neq 0 (
     exit /b
 )
 
-echo Creating virtual environment...
+:: Create a virtual environment if it doesn't exist
 if not exist venv (
+    echo Creating virtual environment...
     python -m venv venv
 )
 
-echo Activating virtual environment...
+:: Activate the virtual environment
 call venv\Scripts\activate
 
-echo Upgrading pip and installing dependencies...
+:: Upgrade pip and install requirements
+echo Installing dependencies...
 pip install --upgrade pip
 pip install -r requirements.txt
 
+:: Start Flask App
 echo Starting Flask on http://127.0.0.1:5000/
 start "" http://127.0.0.1:5000/  <== Opens the web app in the browser
 set FLASK_APP=run.py
 set FLASK_ENV=development
 python run.py
 
-echo Flask is running...
+:: Keep console open
 pause
