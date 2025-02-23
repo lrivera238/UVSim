@@ -3,25 +3,21 @@ echo Starting Local Flask App...
 echo -------------------------------------
 
 :: Check if Python is installed
-where python >nul 2>nul
+
+:: Install Python using winget
+winget install --id Python.Python.3.11 -e --source winget
+
+:: Verify installation
+python --version
 if %errorlevel% neq 0 (
-    echo Python is not installed. Installing using winget...
-
-    :: Install Python using winget
-    winget install --id Python.Python.3.11 -e --source winget
-
-    :: Verify installation
-    python --version
-    if %errorlevel% neq 0 (
-        echo ERROR: Python installation failed.
-        pause
-        exit /b
-    )
-    echo Python installed successfully.
+    echo ERROR: Python installation failed.
+    pause
+    exit /b
 )
+echo Python installed successfully.
 
 :: Ensure pip is installed
-python get-pip.py
+python -m ensurepip --default-pip
 if %errorlevel% neq 0 (
     echo ERROR: pip installation failed.
     pause
