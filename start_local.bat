@@ -20,6 +20,18 @@ if %errorlevel% neq 0 (
     echo Python installed successfully.
 )
 
+:: Ensure pip is installed
+python -m ensurepip --default-pip
+if %errorlevel% neq 0 (
+    echo ERROR: pip installation failed.
+    pause
+    exit /b
+)
+echo pip installed successfully.
+
+:: Upgrade pip to the latest version
+python -m pip install --upgrade pip
+
 :: Create a virtual environment if it doesn't exist
 if not exist venv (
     echo Creating virtual environment...
@@ -29,9 +41,8 @@ if not exist venv (
 :: Activate the virtual environment
 call venv\Scripts\activate
 
-:: Upgrade pip and install requirements
+:: Install project dependencies
 echo Installing dependencies...
-pip install --upgrade pip
 pip install -r requirements.txt
 
 :: Start Flask App
