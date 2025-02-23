@@ -1,5 +1,5 @@
 import os
-from app import app  # Ensure this correctly imports your Flask instance
+from app.app import app  # Ensure this correctly imports your Flask instance
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # Use Render’s PORT or fallback to 5000
