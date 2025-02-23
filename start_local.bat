@@ -16,10 +16,10 @@ pip install -r requirements.txt
 
 :: Start Flask App
 echo Starting Flask on http://127.0.0.1:5000/
-start "" http://127.0.0.1:5000/  <== Opens the web app in the browser
 set FLASK_APP=run.py
 set FLASK_ENV=development
 python run.py
+start "" http://127.0.0.1:5000/  <== Opens the web app in the browser
 
 :: Keep console open
 pause
