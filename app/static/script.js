@@ -1,5 +1,7 @@
+console.log("Using API:", API_BASE); // Debugging log
+
 function updateMemory(address, value) {
-    fetch('/api/update_memory', {
+    fetch(`${API_BASE}/update_memory`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ address: address, value: value.trim() }) // Trim spaces
@@ -13,7 +15,7 @@ function updateMemory(address, value) {
 }
 
 function fetchMemory() {
-    fetch('/api/get_memory')
+    fetch(`${API_BASE}/get_memory`)
     .then(response => response.json())
     .then(data => {
         fetchStatus().then(statusData => {
@@ -55,7 +57,7 @@ function fetchMemory() {
 }
 
 function fetchStatus() {
-    return fetch('/api/get_status')
+    return fetch(`${API_BASE}/get_status`)
     .then(response => response.json())
     .then(data => {
         document.getElementById('accumulator').innerText = data.accumulator;
@@ -68,7 +70,7 @@ function fetchStatus() {
 function executeInstruction(userInput = null) {
     isRunning = true; // Set running state
 
-    fetch('/api/step_instruction', {
+    fetch(`${API_BASE}/step_instruction`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ input: userInput })
@@ -141,7 +143,7 @@ function submitInput() {
 
 
 function resetSystem() {
-    fetch('/api/reset', { method: 'POST' })
+    fetch(`${API_BASE}/reset`, { method: 'POST' })
     .then(response => response.json())
     .then(data => {
         console.log(data.message);
@@ -164,7 +166,7 @@ function loadFile() {
     let formData = new FormData();
     formData.append("file", file);
 
-    fetch('/api/load_file', {
+    fetch(`${API_BASE}/load_file`, {
         method: 'POST',
         body: formData
     })
