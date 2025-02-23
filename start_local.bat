@@ -21,7 +21,7 @@ if %errorlevel% neq 0 (
 )
 
 :: Ensure pip is installed
-python -m ensurepip --default-pip
+python get-pip.py
 if %errorlevel% neq 0 (
     echo ERROR: pip installation failed.
     pause
