@@ -9,10 +9,10 @@ app.register_blueprint(uvsim_api, url_prefix='/api')
 
 @app.route('/')
 def home():
-    # accumulator_value = uvsim_model.accumulator  # Get accumulator value
-    api_base = os.environ.get("API_BASE", "http://127.0.0.1:5000/api")  # Use Render URL or default to local
+    # Get the API base URL from environment or construct it dynamically
+    api_base = os.environ.get("API_BASE", "/api")
     return render_template('index.html', API_BASE=api_base)
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Use Render’s provided PORT or default to 5000
-    app.run(host="0.0.0.0", port=port, debug=False)
+    # Let gunicorn handle the port binding
+    app.run(host="0.0.0.0", debug=False)
