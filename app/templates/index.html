@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,20 +8,21 @@
     <script defer src="{{ url_for('static', filename='script.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
+
 <body>
     <h1>UVSim Execution</h1>
 
     <!-- Execution Message -->
-    
+
     <div class="main-content">
-        
+
         <div class="memory-wrapper">
             <div class="memory-container" id="memoryContainer"></div>
-        
+
             <!-- Buttons Below Memory Container -->
             <div class="button-container">
                 <button onclick="executeInstruction()">Run</button>
-                <!-- <button onclick="stepInstruction()" class="step-button">Step</button> -->
+                <button onclick="stepInstruction()" class="step-button">Step</button>
                 <button onclick="resetSystem()" class="reset-button">Reset</button>
             </div>
             <!-- File Upload Section -->
@@ -29,23 +31,32 @@
                 <button onclick="loadFile()">Load File</button>
             </div>
         </div>
-    
+
         <!-- Status Table (Stays to the right of memory-container) -->
         <div class="status-table">
             <h3>System Status</h3>
             <table>
-                <tr><th>Register</th><th>Value</th></tr>
-                <tr><td>Accumulator</td><td id="accumulator">Loading...</td></tr>
-                <tr><td>Instruction Pointer</td><td id="instruction-pointer">Loading...</td></tr>
+                <tr>
+                    <th>Register</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td>Accumulator</td>
+                    <td id="accumulator">Loading...</td>
+                </tr>
+                <tr>
+                    <td>Instruction Pointer</td>
+                    <td id="instruction-pointer">Loading...</td>
+                </tr>
             </table>
-            
+
             <h4>Execution Console</h4>
             <div class="console-container">
                 <div id="execution-message"></div>
             </div>
         </div>
     </div>
-    
+
     <!-- Input Modal (Hidden by Default) -->
     <div id="input-modal" class="modal hidden">
         <div class="modal-content">
@@ -64,4 +75,5 @@
     </script>
 
 </body>
+
 </html>
