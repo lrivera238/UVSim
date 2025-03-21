@@ -21,14 +21,12 @@
 
             <!-- Buttons Below Memory Container -->
             <div class="button-container">
-                <button onclick="executeInstruction()">Run</button>
-                <button onclick="stepInstruction()" class="step-button">Step</button>
-                <button onclick="resetSystem()" class="reset-button">Reset</button>
-            </div>
-            <!-- File Upload Section -->
-            <div class="file-upload">
-                <input type="file" id="file-input" accept=".txt">
-                <button onclick="loadFile()">Load File</button>
+                <div class="top-buttons">
+                    <button onclick="executeInstruction()">Run</button>
+                    <button onclick="stepInstruction()" class="step-button">Step</button>
+                    <button onclick="resetSystem()" class="reset-button">Reset</button>
+                </div>
+                <button onclick="loadFile()" class="load-button">Load Program</button>
             </div>
         </div>
 
