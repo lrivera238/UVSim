@@ -16,7 +16,8 @@ class UVSimService:
     def load_to_memory(self, instructions):
         """Load a list of instructions into memory."""
         self.model.reset()
-        for index, line in enumerate(instructions):
+        # Only load up to 100 instructions
+        for index, line in enumerate(instructions[:100]):
             self.model.memory[index] = line
             
     def reset(self):
@@ -44,10 +45,10 @@ class UVSimService:
             case "10":  # Read
                 if user_input is None:
                     return {"message": f"Input required for memory[{operand}]", "waitForInput": True}
-                try:
-                    self.memory.read(operand, user_input)
-                except ValueError as e:
-                    return {"message": f"Error: {str(e)}", "halt": True}
+                # Let ValueError propagate up for invalid input
+                self.memory.read(operand, user_input)
+                self.model.instruction_pointer += 1
+                return {"message": f"Read {user_input} into memory[{operand}]"}
 
             case "11":  # Write
                 self.model.instruction_pointer += 1
