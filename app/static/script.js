@@ -186,10 +186,22 @@ function loadFile() {
         })
             .then(response => response.json())
             .then(data => {
-                alert(data.message);
-                fetchMemory(); // Refresh memory after loading file
+                if (data.error) {
+                    // Always refresh memory display in case of error (memory might have been reset)
+                    fetchMemory();
+                    // Show the error message
+                    alert(data.message);
+                    // Also log the error to the execution console
+                    appendToConsole(data.message);
+                } else {
+                    alert(data.message);
+                    fetchMemory(); // Refresh memory after loading file
+                }
             })
-            .catch(error => console.error('Error loading file:', error));
+            .catch(error => {
+                console.error('Error loading file:', error);
+                alert('Error loading file. Please try again.');
+            });
     });
 
     // Trigger the file selection dialog

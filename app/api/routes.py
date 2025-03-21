@@ -73,6 +73,16 @@ def load_file():
     # Normalize line endings and remove hidden characters
     instructions = [line.strip() for line in content.splitlines() if line.strip()]
 
+    # Check if there are more than 100 commands (excluding -99999)
+    command_count = sum(1 for instr in instructions if instr != '-99999')
+    if command_count > 100:
+        # Reset the system to clear memory
+        uvsim_service.reset()
+        return jsonify({
+            "error": "Program too long",
+            "message": f"Error: Cannot load program. You attempted to load {command_count} commands, but the maximum allowed is 100."
+        }), 400
+
     # Load into memory
     uvsim_service.load_to_memory(instructions)
 
