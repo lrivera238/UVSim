@@ -163,27 +163,37 @@ function resetSystem() {
 }
 
 function loadFile() {
-    let fileInput = document.getElementById('file-input');
-    let file = fileInput.files[0]; // Get the selected file
+    // Create a temporary file input element
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.txt';
 
-    if (!file) {
-        alert("Please select a file.");
-        return;
-    }
+    // When a file is selected, handle the upload
+    fileInput.addEventListener('change', function () {
+        const file = fileInput.files[0];
 
-    let formData = new FormData();
-    formData.append("file", file);
+        if (!file) {
+            alert("Please select a file.");
+            return;
+        }
 
-    fetch(`${API_BASE}/load_file`, {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            fetchMemory(); // Refresh memory after loading file
+        let formData = new FormData();
+        formData.append("file", file);
+
+        fetch(`${API_BASE}/load_file`, {
+            method: 'POST',
+            body: formData
         })
-        .catch(error => console.error('Error loading file:', error));
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                fetchMemory(); // Refresh memory after loading file
+            })
+            .catch(error => console.error('Error loading file:', error));
+    });
+
+    // Trigger the file selection dialog
+    fileInput.click();
 }
 
 // Add this new function for the Step button
