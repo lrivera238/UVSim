@@ -100,5 +100,3 @@ def reset_system():
     """Resets the UVSim system to its initial state."""
     result = uvsim_service.reset()
     return jsonify(result), 200
-
-

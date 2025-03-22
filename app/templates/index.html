@@ -21,12 +21,15 @@
 
             <!-- Buttons Below Memory Container -->
             <div class="button-container">
-                <div class="top-buttons">
+                <div class="button-row">
                     <button onclick="executeInstruction()">Run</button>
                     <button onclick="stepInstruction()" class="step-button">Step</button>
                     <button onclick="resetSystem()" class="reset-button">Reset</button>
                 </div>
-                <button onclick="loadFile()" class="load-button">Load Program</button>
+                <div class="button-row">
+                    <button onclick="loadFile()" class="load-button">Load Program</button>
+                    <button onclick="saveFile()" class="save-button">Save Program</button>
+                </div>
             </div>
         </div>
 
