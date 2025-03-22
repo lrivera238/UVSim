@@ -237,24 +237,37 @@ function stepInstruction(userInput = null) {
 }
 
 function saveFile() {
-    const fileName = prompt("Enter file path to save:");
-    if (!fileName) return;
+    // Create a temporary anchor element for saving
+    const link = document.createElement('a');
 
-    fetch(`${API_BASE}/save_file`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ filename: fileName }),
-    })
-    .then(res => res.json())
-    .then(data => {
-        alert(data.message || data.error);
-    })
-    .catch(err => {
-        console.error("Save error:", err);
-        alert("Something went wrong.");
-    });
+    // Create the content to save
+    let content = '';
+    fetch(`${API_BASE}/get_memory`)
+        .then(response => response.json())
+        .then(data => {
+            // Create content string from memory
+            content = data.memory.join('\n');
+
+            // Create a Blob with the content
+            const blob = new Blob([content], { type: 'text/plain' });
+
+            // Create a URL for the Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Setup the download link
+            link.href = url;
+            link.download = 'program.txt'; // Default filename
+
+            // Trigger the download
+            link.click();
+
+            // Cleanup
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(err => {
+            console.error("Save error:", err);
+            alert("Something went wrong while saving the file.");
+        });
 }
 
 

@@ -4,12 +4,6 @@ body {
     margin: 20px;
 }
 
-.container {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-}
-
 /* Memory + Status Table Container */
 .main-content {
     display: flex;
@@ -89,9 +83,10 @@ body {
     width: 100%;
     margin-top: 5px;
     padding: 0 10px;
+    align-items: flex-start;
 }
 
-.top-buttons {
+.button-row {
     display: flex;
     gap: 5px;
     margin-bottom: 5px;
@@ -118,11 +113,6 @@ button:hover {
 
 .reset-button:hover {
     background: darkred;
-}
-
-/* Load button specific styles */
-.load-button {
-    align-self: flex-start;
 }
 
 /* Modal Background */
