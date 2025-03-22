@@ -236,5 +236,52 @@ function stepInstruction(userInput = null) {
         });
 }
 
+function changeColor() {
+    var r = document.querySelector(':root');
+    let inputs = [];
+    for (let i = 0; i < 4; i++) {
+        let userInput = prompt(`Enter 4 hexadecimal colors:`);
+        if (userInput == "" || userInput == null) {
+            break;
+        }
+        if (userInput[0] != '#') {
+            userInput = "#" + userInput
+        }
+        if (userInput.length > 7) {
+            userInput = userInput.slice(0,7)
+        }
+        inputs.push(userInput);
+    }
+    if (inputs.length == 4) {
+        r.style.setProperty('--backdrop', inputs[0])
+        //localStorage.setItem("--backdrop", str(inputs[0]))
+        r.style.setProperty('--background', inputs[1])
+        //localStorage.setItem("--background", str(inputs[1]))
+        r.style.setProperty('--primary', inputs[2])
+        //localStorage.setItem("--primary", str(inputs[2]))
+        r.style.setProperty('--secondary', inputs[3])
+        //localStorage.setItem("--secondary", str(inputs[3]))
+    }
+}
+
+// quick attempt at saving the config, didn't work but might be useful dead code regardless
+
+/*
+function getCookies() {
+    document.getElementById("refresh").addEventListener("click", (event) => {
+        window.location.reload();
+      });
+    if(localStorage.getItem("--backdrop") != null)
+        document.documentElement.style.setProperty("--backdrop", localStorage.getItem("--backdrop"));
+    if(localStorage.getItem("--background") != null)
+        document.documentElement.style.setProperty("--background", localStorage.getItem("--background"));
+    if(localStorage.getItem("--primary") != null)
+        document.documentElement.style.setProperty("--primary", localStorage.getItem("--primary"));
+    if(localStorage.getItem("--secondary") != null)
+        document.documentElement.style.setProperty("--secondary", localStorage.getItem("--secondary"));
+}
+*/
 // Fetch memory and status on page load
 window.onload = fetchMemory;
+
+// window.onload = getCookies;
