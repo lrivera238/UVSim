@@ -9,15 +9,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
-<body>
-    <h1>UVSim Execution</h1>
+<body class="backdrop">
+    <div class="background">
+        <h1 class="title">UVSim Execution</h1>
 
-    <!-- Execution Message -->
+        <!-- Execution Message -->
 
-    <div class="main-content">
+        <div class="main-content">
 
-        <div class="memory-wrapper">
-            <div class="memory-container" id="memoryContainer"></div>
+            <div class="memory-wrapper">
+                <div class="memory-container" id="memoryContainer"></div>
 
             <!-- Buttons Below Memory Container -->
             <div class="button-container">
@@ -31,49 +32,50 @@
                     <button onclick="saveFile()" class="save-button">Save Program</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Status Table (Stays to the right of memory-container) -->
-        <div class="status-table">
-            <h3>System Status</h3>
-            <table>
-                <tr>
-                    <th>Register</th>
-                    <th>Value</th>
-                </tr>
-                <tr>
-                    <td>Accumulator</td>
-                    <td id="accumulator">Loading...</td>
-                </tr>
-                <tr>
-                    <td>Instruction Pointer</td>
-                    <td id="instruction-pointer">Loading...</td>
-                </tr>
-            </table>
+            <!-- Status Table (Stays to the right of memory-container) -->
+            <div class="status-table">
+                <h3>System Status</h3>
+                <table>
+                    <tr>
+                        <th>Register</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Accumulator</td>
+                        <td id="accumulator">Loading...</td>
+                    </tr>
+                    <tr>
+                        <td>Instruction Pointer</td>
+                        <td id="instruction-pointer">Loading...</td>
+                    </tr>
+                </table>
 
-            <h4>Execution Console</h4>
-            <div class="console-container">
-                <div id="execution-message"></div>
+                <h4>Execution Console</h4>
+                <div class="console-container">
+                    <div id="execution-message"></div>
+                </div>
+                <button style="margin-top: 9.5px;" onclick="changeColor()">Adjust Color</button>
             </div>
         </div>
-    </div>
 
-    <!-- Input Modal (Hidden by Default) -->
-    <div id="input-modal" class="modal hidden">
-        <div class="modal-content">
-            <h3>Input Required</h3>
-            <p>Enter a value:</p>
-            <input type="text" id="user-input" placeholder="Enter a number">
-            <div class="modal-buttons">
-                <button onclick="submitInput()">Submit</button>
+        <!-- Input Modal (Hidden by Default) -->
+        <div id="input-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Input Required</h3>
+                <p>Enter a value:</p>
+                <input type="text" id="user-input" placeholder="Enter a number">
+                <div class="modal-buttons">
+                    <button onclick="submitInput()">Submit</button>
+                </div>
             </div>
         </div>
+<!--
+        <script>
+            const API_BASE = "{{ API_BASE }}"; // Flask injects API_BASE here
+            console.log("Using API:", API_BASE);
+        </script>-->
     </div>
-
-    <script>
-        const API_BASE = "{{ API_BASE }}"; // Flask injects API_BASE here
-        console.log("Using API:", API_BASE);
-    </script>
 
 </body>
 

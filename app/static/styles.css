@@ -1,7 +1,39 @@
+:root {
+    --backdrop: #000000;
+    --background: #272727;
+    --primary: #078f3b;
+    --secondary: #575757;
+}
+
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     margin: 20px;
+}
+
+
+.backdrop {
+    background-color: var(--backdrop);
+}
+
+.background {
+    background-color: var(--background); 
+    padding: 30px; 
+    display: inline-block; 
+    border-radius: 5px;
+}
+
+.title {
+    background-color: var(--primary); 
+    padding: 10px; 
+    margin-top: 0px; 
+    border-radius: 5px;
+}
+
+.container {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
 }
 
 /* Memory + Status Table Container */
@@ -53,8 +85,8 @@ body {
 
 .memory-input:focus {
     outline: none;
-    border-color: #007BFF;
-    box-shadow: 0 0 5px #007BFF;
+    border-color: var(--primary);
+    box-shadow: 0 0 5px var(--primary);
 }
 
 /* Status table styling */
@@ -95,7 +127,7 @@ body {
 button {
     padding: 10px;
     font-size: 14px;
-    background: #007BFF;
+    background: var(--secondary);
     color: white;
     border: none;
     border-radius: 5px;
@@ -103,16 +135,16 @@ button {
 }
 
 button:hover {
-    background: #0056b3;
+    background: var(--primary);
 }
 
 /* Reset Button */
 .reset-button {
-    background: red;
+    background: rgb(139, 0, 0);
 }
 
 .reset-button:hover {
-    background: darkred;
+    background: rgb(87, 0, 0);
 }
 
 /* Modal Background */
@@ -151,14 +183,14 @@ button:hover {
     padding: 8px 16px;
     font-size: 14px;
     border: none;
-    background: #007BFF;
+    background: var(--secondary);
     color: white;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .modal-buttons button:hover {
-    background: #0056b3;
+    background: var(--primary);
 }
 
 .hidden {
@@ -169,7 +201,7 @@ button:hover {
 .highlight {
     background-color: lightgrey !important;
     font-weight: bold;
-    border: 2px solid red;
+    border: 2px solid var(--primary);
 }
 
 /* Execution Console */
