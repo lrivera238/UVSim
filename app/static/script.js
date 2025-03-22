@@ -236,6 +236,7 @@ function stepInstruction(userInput = null) {
         });
 }
 
+
 function changeColor() {
     var r = document.querySelector(':root');
     let inputs = [];
@@ -281,6 +282,41 @@ function getCookies() {
         document.documentElement.style.setProperty("--secondary", localStorage.getItem("--secondary"));
 }
 */
+
+function saveFile() {
+    // Create a temporary anchor element for saving
+    const link = document.createElement('a');
+
+    // Create the content to save
+    let content = '';
+    fetch(`${API_BASE}/get_memory`)
+        .then(response => response.json())
+        .then(data => {
+            // Create content string from memory
+            content = data.memory.join('\n');
+
+            // Create a Blob with the content
+            const blob = new Blob([content], { type: 'text/plain' });
+
+            // Create a URL for the Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Setup the download link
+            link.href = url;
+            link.download = 'program.txt'; // Default filename
+
+            // Trigger the download
+            link.click();
+
+            // Cleanup
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(err => {
+            console.error("Save error:", err);
+            alert("Something went wrong while saving the file.");
+        });
+}
+
 // Fetch memory and status on page load
 window.onload = fetchMemory;
 
