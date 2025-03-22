@@ -16,24 +16,23 @@
         <!-- Execution Message -->
 
         <div class="main-content">
-
             <div class="memory-wrapper">
                 <div class="memory-container" id="memoryContainer"></div>
-
-            <!-- Buttons Below Memory Container -->
-            <div class="button-container">
-                <div class="button-row">
-                    <button onclick="executeInstruction()">Run</button>
-                    <button onclick="stepInstruction()" class="step-button">Step</button>
-                    <button onclick="resetSystem()" class="reset-button">Reset</button>
-                </div>
-                <div class="button-row">
-                    <button onclick="loadFile()" class="load-button">Load Program</button>
-                    <button onclick="saveFile()" class="save-button">Save Program</button>
+                <!-- Buttons Below Memory Container -->
+                <div class="button-container">
+                    <div class="button-row">
+                        <button onclick="executeInstruction()">Run</button>
+                        <button onclick="stepInstruction()" class="step-button">Step</button>
+                        <button onclick="resetSystem()" class="reset-button">Reset</button>
+                    </div>
+                    <div class="button-row">
+                        <button onclick="loadFile()" class="load-button">Load Program</button>
+                        <button onclick="saveFile()" class="save-button">Save Program</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Status Table (Stays to the right of memory-container) -->
+            <!-- Move status-table outside of memory-wrapper -->
             <div class="status-table">
                 <h3>System Status</h3>
                 <table>
@@ -70,7 +69,7 @@
                 </div>
             </div>
         </div>
-<!--
+        <!--
         <script>
             const API_BASE = "{{ API_BASE }}"; // Flask injects API_BASE here
             console.log("Using API:", API_BASE);
