@@ -1,3 +1,5 @@
+const API_BASE = '/api';
+
 console.log("Using API:", API_BASE); // Debugging log
 
 function updateMemory(address, value) {
@@ -249,7 +251,7 @@ function changeColor() {
             userInput = "#" + userInput
         }
         if (userInput.length > 7) {
-            userInput = userInput.slice(0,7)
+            userInput = userInput.slice(0, 7)
         }
         inputs.push(userInput);
     }
