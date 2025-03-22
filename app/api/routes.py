@@ -102,3 +102,17 @@ def reset_system():
     return jsonify(result), 200
 
 
+@uvsim_api.route('/save_file', methods=['POST'])
+def save_file():
+    """Saves the current memory to a file path provided by the user."""
+    data = request.json
+    filename = data.get('filename')
+    memory = uvsim_model.memory
+
+    try:
+        with open(filename, "w") as file:
+            for line in memory:
+                file.write(line + "\n")
+        return jsonify({"message": f"File saved to {filename}"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

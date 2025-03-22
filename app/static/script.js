@@ -236,5 +236,27 @@ function stepInstruction(userInput = null) {
         });
 }
 
+function saveFile() {
+    const fileName = prompt("Enter file path to save:");
+    if (!fileName) return;
+
+    fetch(`${API_BASE}/save_file`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ filename: fileName }),
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message || data.error);
+    })
+    .catch(err => {
+        console.error("Save error:", err);
+        alert("Something went wrong.");
+    });
+}
+
+
 // Fetch memory and status on page load
 window.onload = fetchMemory;
