@@ -1,3 +1,5 @@
+const API_BASE = '/api';
+
 console.log("Using API:", API_BASE); // Debugging log
 
 function updateMemory(address, value) {
@@ -163,27 +165,49 @@ function resetSystem() {
 }
 
 function loadFile() {
-    let fileInput = document.getElementById('file-input');
-    let file = fileInput.files[0]; // Get the selected file
+    // Create a temporary file input element
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.txt';
 
-    if (!file) {
-        alert("Please select a file.");
-        return;
-    }
+    // When a file is selected, handle the upload
+    fileInput.addEventListener('change', function () {
+        const file = fileInput.files[0];
 
-    let formData = new FormData();
-    formData.append("file", file);
+        if (!file) {
+            alert("Please select a file.");
+            return;
+        }
 
-    fetch(`${API_BASE}/load_file`, {
-        method: 'POST',
-        body: formData
-    })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            fetchMemory(); // Refresh memory after loading file
+        let formData = new FormData();
+        formData.append("file", file);
+
+        fetch(`${API_BASE}/load_file`, {
+            method: 'POST',
+            body: formData
         })
-        .catch(error => console.error('Error loading file:', error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    // Always refresh memory display in case of error (memory might have been reset)
+                    fetchMemory();
+                    // Show the error message
+                    alert(data.message);
+                    // Also log the error to the execution console
+                    appendToConsole(data.message);
+                } else {
+                    alert(data.message);
+                    fetchMemory(); // Refresh memory after loading file
+                }
+            })
+            .catch(error => {
+                console.error('Error loading file:', error);
+                alert('Error loading file. Please try again.');
+            });
+    });
+
+    // Trigger the file selection dialog
+    fileInput.click();
 }
 
 // Add this new function for the Step button
@@ -214,5 +238,88 @@ function stepInstruction(userInput = null) {
         });
 }
 
+
+function changeColor() {
+    var r = document.querySelector(':root');
+    let inputs = [];
+    for (let i = 0; i < 4; i++) {
+        let userInput = prompt(`Enter 4 hexadecimal colors:`);
+        if (userInput == "" || userInput == null) {
+            break;
+        }
+        if (userInput[0] != '#') {
+            userInput = "#" + userInput
+        }
+        if (userInput.length > 7) {
+            userInput = userInput.slice(0, 7)
+        }
+        inputs.push(userInput);
+    }
+    if (inputs.length == 4) {
+        r.style.setProperty('--backdrop', inputs[0])
+        //localStorage.setItem("--backdrop", str(inputs[0]))
+        r.style.setProperty('--background', inputs[1])
+        //localStorage.setItem("--background", str(inputs[1]))
+        r.style.setProperty('--primary', inputs[2])
+        //localStorage.setItem("--primary", str(inputs[2]))
+        r.style.setProperty('--secondary', inputs[3])
+        //localStorage.setItem("--secondary", str(inputs[3]))
+    }
+}
+
+// quick attempt at saving the config, didn't work but might be useful dead code regardless
+
+/*
+function getCookies() {
+    document.getElementById("refresh").addEventListener("click", (event) => {
+        window.location.reload();
+      });
+    if(localStorage.getItem("--backdrop") != null)
+        document.documentElement.style.setProperty("--backdrop", localStorage.getItem("--backdrop"));
+    if(localStorage.getItem("--background") != null)
+        document.documentElement.style.setProperty("--background", localStorage.getItem("--background"));
+    if(localStorage.getItem("--primary") != null)
+        document.documentElement.style.setProperty("--primary", localStorage.getItem("--primary"));
+    if(localStorage.getItem("--secondary") != null)
+        document.documentElement.style.setProperty("--secondary", localStorage.getItem("--secondary"));
+}
+*/
+
+function saveFile() {
+    // Create a temporary anchor element for saving
+    const link = document.createElement('a');
+
+    // Create the content to save
+    let content = '';
+    fetch(`${API_BASE}/get_memory`)
+        .then(response => response.json())
+        .then(data => {
+            // Create content string from memory
+            content = data.memory.join('\n');
+
+            // Create a Blob with the content
+            const blob = new Blob([content], { type: 'text/plain' });
+
+            // Create a URL for the Blob
+            const url = window.URL.createObjectURL(blob);
+
+            // Setup the download link
+            link.href = url;
+            link.download = 'program.txt'; // Default filename
+
+            // Trigger the download
+            link.click();
+
+            // Cleanup
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(err => {
+            console.error("Save error:", err);
+            alert("Something went wrong while saving the file.");
+        });
+}
+
 // Fetch memory and status on page load
 window.onload = fetchMemory;
+
+// window.onload = getCookies;

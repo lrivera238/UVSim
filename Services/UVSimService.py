@@ -1,73 +1,13 @@
+from .ArithmeticOperations import ArithmeticOperations
+from .MemoryOperations import MemoryOperations
+from .BranchOperations import BranchOperations
+
 class UVSimService:
     def __init__(self, model):
         self.model = model
-
-    def read(self, operand, value):
-        """Simulate reading an input."""
-        try:
-            value = int(value)
-        except ValueError:
-            raise ValueError("Invalid input: must be an integer")
-
-        if not (-9999 <= value <= 9999):
-            raise ValueError("Invalid input: must be within (-9999 to 9999)")
-
-        # Store formatted value in memory
-        self.model.memory[int(operand)] = self.model.format_value(value)
-
-    def write(self, operand):
-        """Retrieve a value from memory."""
-        memory_value = self.model.memory[int(operand)]
-        # Convert string format to integer for output
-        if isinstance(memory_value, str) and len(memory_value) == 5:
-            sign = 1 if memory_value[0] == "+" else -1
-            return sign * int(memory_value[1:])
-        return memory_value
-
-    def load(self, operand):
-        """Load a value into the accumulator."""
-        self.model.accumulator = int(self.model.memory[int(operand)])
-
-    def store(self, operand):
-        """Store the accumulator value into memory."""
-        self.model.memory[int(operand)] = self.model.format_value(self.model.accumulator)
-
-    def add(self, operand):
-        """Add a value to the accumulator."""
-        self.model.accumulator += int(self.model.memory[int(operand)])
-
-    def subtract(self, operand):
-        """Subtract a value from the accumulator."""
-        self.model.accumulator -= int(self.model.memory[int(operand)])
-
-    def divide(self, operand):
-        """Divide the accumulator by a value."""
-        divisor = int(self.model.memory[int(operand)])
-        if divisor == 0:
-            raise ZeroDivisionError("Cannot divide by zero")
-        self.model.accumulator /= divisor
-
-    def multiply(self, operand):
-        """Multiply the accumulator by a value."""
-        self.model.accumulator *= int(self.model.memory[int(operand)])
-
-    def branch(self, operand):
-        """Branch unconditionally."""
-        self.model.instruction_pointer = int(operand)
-
-    def branch_neg(self, operand):
-        """Branch if accumulator is negative."""
-        if self.model.accumulator < 0:
-            self.model.instruction_pointer = int(operand)
-            return True
-        return False
-
-    def branch_zero(self, operand):
-        """Branch if accumulator is zero."""
-        if self.model.accumulator == 0:
-            self.model.instruction_pointer = int(operand)
-            return True
-        return False
+        self.arithmetic = ArithmeticOperations(model)
+        self.memory = MemoryOperations(model)
+        self.branch = BranchOperations(model)
 
     def halt(self):
         """Halt execution."""
@@ -76,7 +16,8 @@ class UVSimService:
     def load_to_memory(self, instructions):
         """Load a list of instructions into memory."""
         self.model.reset()
-        for index, line in enumerate(instructions):
+        # Only load up to 100 instructions
+        for index, line in enumerate(instructions[:100]):
             self.model.memory[index] = line
             
     def reset(self):
@@ -84,8 +25,8 @@ class UVSimService:
         self.model.reset()
         return {"message": "System reset successful."}
 
-    def step_instruction(self, user_input=None): #This used to be execute()
-        """Executes the next instruction in memory. If input is required, it waits for user input."""
+    def step_instruction(self, user_input=None):
+        """Executes the next instruction in memory."""
         if self.model.instruction_pointer >= len(self.model.memory):
             return {"message": "End of program reached without HALT", "halt": True}
 
@@ -101,46 +42,45 @@ class UVSimService:
             return {"message": f"Invalid instruction {instruction} at {self.model.instruction_pointer}", "halt": True}
 
         match opcode:
-            case "10":  # Read (Requires input)
+            case "10":  # Read
                 if user_input is None:
                     return {"message": f"Input required for memory[{operand}]", "waitForInput": True}
-
-                try:
-                    self.read(operand, user_input)
-                except ValueError as e:
-                    return {"message": f"Error: {str(e)}", "halt": True}
+                # Let ValueError propagate up for invalid input
+                self.memory.read(operand, user_input)
+                self.model.instruction_pointer += 1
+                return {"message": f"Read {user_input} into memory[{operand}]"}
 
             case "11":  # Write
                 self.model.instruction_pointer += 1
-                return {"message": f"Output: {self.write(operand)}"}
+                return {"message": f"Output: {self.memory.write(operand)}"}
 
             case "20":  # Load
-                self.load(operand)
+                self.memory.load(operand)
             case "21":  # Store
-                self.store(operand)
+                self.memory.store(operand)
             case "30":  # Add
-                self.add(operand)
+                self.arithmetic.add(operand)
             case "31":  # Subtract
-                self.subtract(operand)
+                self.arithmetic.subtract(operand)
             case "32":  # Divide
-                self.divide(operand)
+                self.arithmetic.divide(operand)
             case "33":  # Multiply
-                self.multiply(operand)
+                self.arithmetic.multiply(operand)
             case "40":  # Branch
-                self.branch(operand)
+                self.branch.branch(operand)
                 return {"message": f"Branched to {operand}"}
             case "41":  # Branch if Negative
-                if self.branch_neg(operand):
+                if self.branch.branch_neg(operand):
                     return {"message": f"Branching to {operand} because accumulator is negative"}
             case "42":  # Branch if Zero
-                if self.branch_zero(operand):
+                if self.branch.branch_zero(operand):
                     return {"message": f"Branching to {operand} because accumulator is zero"}
             case "43":  # Halt
                 return {"message": "Program halted.", "halt": True}
             case _:
                 return {"message": f"Invalid instruction {instruction} at {self.model.instruction_pointer}", "halt": True}
 
-        self.model.instruction_pointer += 1  # Move to the next instruction
+        self.model.instruction_pointer += 1
         if self.model.instruction_pointer >= len(self.model.memory):
             return {"message": "End of program reached without HALT", "halt": True}
         return {"message": f"Executed instruction {instruction}. Pointer at {self.model.instruction_pointer}"}

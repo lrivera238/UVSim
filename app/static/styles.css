@@ -1,31 +1,44 @@
+:root {
+    --backdrop: #000000;
+    --background: #272727;
+    --primary: #078f3b;
+    --secondary: #575757;
+}
+
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     margin: 20px;
 }
 
-.container {
-    display: flex;
-    align-items: flex-start;
+.backdrop {
+    background-color: var(--backdrop);
+}
+
+.background {
+    background-color: var(--background);
+    padding: 30px;
+    display: inline-block;
+    border-radius: 5px;
+}
+
+.title {
+    background-color: var(--primary);
+    padding: 10px;
+    margin-top: 0px;
+    border-radius: 5px;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: auto 300px;
     gap: 20px;
 }
 
-/* Memory + Status Table Container */
-.main-content {
-    display: flex;
-    align-items: flex-start; /* Keep memory and status aligned at the top */
-    gap: 20px; /* Space between memory and status */
-    justify-content: center;
-}
-
-/* Center align memory-wrapper */
 .memory-wrapper {
-    display: flex;
-    flex-direction: column; /* Stack memory and buttons vertically */
-    align-items: center; /* Center memory container */
+    width: fit-content;
 }
 
-/* Memory container styles */
 .memory-container {
     width: 300px;
     height: 400px;
@@ -55,42 +68,56 @@ body {
 
 .memory-input:focus {
     outline: none;
-    border-color: #007BFF;
-    box-shadow: 0 0 5px #007BFF;
+    border-color: var(--primary);
+    box-shadow: 0 0 5px var(--primary);
 }
 
-/* Status table styling */
 .status-table {
-    padding: 10px;
-    border-radius: 5px;
-    background: #f8f8f8;
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Keep status table and buttons separate */
 .status-table table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.status-table th, .status-table td {
+.status-table th,
+.status-table td {
     padding: 8px;
     border: 1px solid #ddd;
 }
 
-/* Buttons BELOW the memory-container */
+.status-table h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.status-table h4 {
+    margin-bottom: 5px;
+}
+
 .button-container {
     display: flex;
-    justify-content: flex-start; /* Left-align buttons */
-    width: 100%; /* Ensure full width to align within memory-wrapper */
-    margin-top: 5px; /* Space between buttons and memory container */
-    margin-left: 10px;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 5px;
+    padding: 0 10px;
+    align-items: flex-start;
+}
+
+.button-row {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 5px;
 }
 
 button {
-    margin-top: 10px;
     padding: 10px;
     font-size: 14px;
-    background: #007BFF;
+    background: var(--secondary);
     color: white;
     border: none;
     border-radius: 5px;
@@ -98,45 +125,31 @@ button {
 }
 
 button:hover {
-    background: #0056b3;
+    background: var(--primary);
 }
 
-.step-button {
-    margin-left: 5px;
-}
-
-/* Reset Button (Aligns to the Right) */
 .reset-button {
-    background: red;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-left: 5px;
+    background: rgb(139, 0, 0);
 }
 
 .reset-button:hover {
-    background: darkred;
+    background: rgb(87, 0, 0);
 }
 
-/* Modal Background */
 .modal {
-    display: none; /* Hidden by default */
+    display: none;
     position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Dim Background */
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Modal Content */
 .modal-content {
     background: white;
     padding: 20px;
@@ -146,7 +159,6 @@ button:hover {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Modal Buttons */
 .modal-buttons {
     margin-top: 10px;
 }
@@ -155,46 +167,37 @@ button:hover {
     padding: 8px 16px;
     font-size: 14px;
     border: none;
-    background: #007BFF;
+    background: var(--secondary);
     color: white;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .modal-buttons button:hover {
-    background: #0056b3;
+    background: var(--primary);
 }
 
 .hidden {
     display: none;
 }
 
-/* Highlight the currently executing memory cell */
 .highlight {
     background-color: lightgrey !important;
     font-weight: bold;
-    border: 2px solid red;
+    border: 2px solid var(--primary);
 }
 
-/* Execution Console */
 .console-container {
-    width: 300px;
-    height: 150px;
+    background-color: var(--background);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background: lightgrey;
     color: black;
     font-family: "Courier New", monospace;
-    padding: 10px;
-    border-radius: 5px;
-    overflow-y: auto;
     border: 2px solid #000000;
     text-align: left;
-}
-
-.status-table h3{
-    margin-top: 5px;
-    margin-bottom: 5px; /* Remove bottom margin */
-}
-
-.status-table h4 {
-    margin-bottom: 5px; /* Remove bottom margin */
 }
