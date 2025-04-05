@@ -114,13 +114,7 @@ To save your current program:
 
 To change themes:
 1. Click the "Adjust color" button
-2. You will be prompted to enter 4 hexadecimal color values in this order:
-   - First color: Main backdrop color (--backdrop)
-   - Second color: Secondary background color (--background)
-   - Third color: Primary color for main elements (--primary)
-   - Fourth color: Secondary color for secondary elements (--secondary)
-3. Each color can be entered with or without the '#' prefix
-4. Colors must be valid 6-digit hexadecimal values (e.g., "FF0000" or "#FF0000" for red)
+2. You will be asked for 4 hex color values
 
 ## Troubleshooting
 
