@@ -32,7 +32,7 @@ class UVSimService:
 
         instruction = self.model.memory[self.model.instruction_pointer]
         if not instruction or len(instruction) != 7:
-            # This is where we'd convert the old 4 length (a + or -, followed by two digits for opcode, followed by 2 digits for operand) to the new 6 length format. One length was added to opcode and operand.
+            # This is where we'd convert the old length to the new 6 length format. One length was added to opcode and operand.
             return {"message": f"Invalid instruction {instruction} at {self.model.instruction_pointer}", "halt": True}
 
         sign = instruction[0]
