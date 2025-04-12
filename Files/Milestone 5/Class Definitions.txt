@@ -1,0 +1,302 @@
+# UVSim Class Definition Document
+
+## Overview
+
+This document describes all the classes used in the UVSim project, their purposes, and the functions they contain. The application follows a Model-View-Controller (MVC) architectural pattern to maintain separation of concerns between the data model, business logic, and user interface.
+
+## Class Diagram
+
+'''
++-----------------+        +---------------------+        +----------------+
+|   UVSimModel    |<-------| UVSimService        |<-------| API Routes     |
++-----------------+        +---------------------+        +----------------+
+| - memory        |        | - model             |        | - uvsim_api    |
+| - accumulator   |        | - arithmetic        |        | - uvsim_model  |
+| - instr_pointer |        | - memory            |        | - uvsim_service|
+| - reset()       |        | - branch            |        | - API endpoints|
+| - format_value()|        | - halt()            |        +----------------+
++-----------------+        | - load_to_memory()  |        +----------------+
+                           | - reset()           |        | Frontend JS    |
+                           | - step_instruction()|        +----------------+
+                           +---------------------+        | - fetchMemory()|
+                                                 |        | - fetchStatus()|
+                                                 |        | - step()       |
+                                                 |        | - etc...       |
+                                                 |        +----------------+
+                                                 |
+                                                 |        +----------------+
+                                                 |        | ArithmeticOps  |
+                                                 |        +----------------+
+                                                 |        | - add()        |
+                                                 |        | - subtract()   |
+                                                 |        | - multiply()   |
+                                                 |        | - divide()     |
+                                                 |        +----------------+
+                                                 |     
+                                                 |        +----------------+
+                                                 |        | MemoryOps      |
+                                                 |        +----------------+
+                                                 |        | - read()       |
+                                                 |        | - write()      |
+                                                 |        | - load()       |
+                                                 |        | - store()      |
+                                                 |        +----------------+
+                                                 |     
+                                                 |        +----------------+
+                                                 |        | BranchOps      |
+                                                 |        +----------------+
+                                                 |        | - branch()     |
+                                                 |        | - branch_neg() |
+                                                 |        | - branch_zero()|
+                                                 |        +----------------+
+                                                 |
+                                                 
+'''
+
+## Classes
+
+### 1. UVSimModel
+
+**Purpose:** Represents the data model for the UVSim virtual machine. It maintains the state of the memory, accumulator, and instruction pointer.
+
+#### Functions:
+
+##### '__init__()'
+- **Purpose:** Initializes the UVSim model with default values.
+- **Parameters:** None
+- **Return Value:** None
+- **Pre-conditions:** None
+- **Post-conditions:** 
+  - Memory is initialized to an array of 250 "+000000" strings
+  - Accumulator is set to 0
+  - Instruction pointer is set to 0
+
+##### 'reset()'
+- **Purpose:** Resets the UVSim model to its initial state.
+- **Parameters:** None
+- **Return Value:** None
+- **Pre-conditions:** None
+- **Post-conditions:** 
+  - Memory is reset to an array of 250 "+000000" strings
+  - Accumulator is reset to 0
+  - Instruction pointer is reset to 0
+
+##### 'format_value(value)'
+- **Purpose:** Formats a numeric value to the standard UVSim format with a sign and four digits.
+- **Parameters:** 
+  - 'value' (int): The numeric value to format
+- **Return Value:** String in the format "+/-NNNNNN"
+- **Pre-conditions:** None
+- **Post-conditions:** Returns a formatted string with a sign and exactly 6 digits
+
+### 2. UVSimService
+
+**Purpose:** Provides business logic for the UVSim operations. It interprets and executes instructions, manages memory operations, and handles program execution flow.
+
+#### Functions:
+
+##### '__init__(model)'
+- **Purpose:** Initializes the service with a reference to the model and operation classes.
+- **Parameters:** 
+  - 'model' (UVSimModel): The UVSim model instance
+- **Return Value:** None
+- **Pre-conditions:** model is a valid UVSimModel instance
+- **Post-conditions:** Service is initialized with references to:
+  - The UVSim model
+  - ArithmeticOperations instance
+  - MemoryOperations instance
+  - BranchOperations instance
+
+##### 'halt()'
+- **Purpose:** Halts program execution.
+- **Parameters:** None
+- **Return Value:** String message indicating program halted
+- **Pre-conditions:** None
+- **Post-conditions:** Returns a message indicating program halted
+
+##### 'load_to_memory(instructions)'
+- **Purpose:** Loads a list of instructions into memory.
+- **Parameters:** 
+  - 'instructions' (list): List of instruction strings to load into memory
+- **Return Value:** None
+- **Pre-conditions:** None
+- **Post-conditions:** 
+  - Memory is reset
+  - Instructions are loaded into sequential memory locations (up to 250)
+
+##### 'reset()'
+- **Purpose:** Resets the UVSim model to its initial state.
+- **Parameters:** None
+- **Return Value:** Dictionary with a success message
+- **Pre-conditions:** None
+- **Post-conditions:** 
+  - The model is reset
+  - Returns a dictionary with a success message
+
+##### 'step_instruction(user_input=None)'
+- **Purpose:** Executes the next instruction in memory, handling various operations based on the opcode.
+- **Parameters:** 
+  - 'user_input' (str, optional): Input for read operations
+- **Return Value:** Dictionary containing execution status
+- **Pre-conditions:** None
+- **Post-conditions:** 
+  - The instruction at the current instruction pointer is executed
+  - Returns a dictionary with execution status including:
+    - message - Description of what happened
+    - halt (optional) - Indicates if execution should halt
+    - waitForInput (optional) - Indicates if user input is required
+  - Delegates operations to appropriate operation classes:
+    - ArithmeticOperations for arithmetic operations
+    - MemoryOperations for memory operations
+    - BranchOperations for branch operations
+
+### 3. Operation Classes
+
+#### ArithmeticOperations
+**Purpose:** Handles arithmetic operations (add, subtract, multiply, divide) for the UVSim.
+
+#### MemoryOperations
+**Purpose:** Handles memory operations (read, write, load, store) for the UVSim.
+
+#### BranchOperations
+**Purpose:** Handles branch operations (branch, branch_neg, branch_zero) for the UVSim.
+
+### 3. Flask API Routes (Blueprint)
+
+**Purpose:** Provides a RESTful API interface for the UVSim, handling HTTP requests and translating them to operations on the service and model.
+
+#### Functions:
+
+##### 'get_memory()'
+- **Purpose:** API endpoint to retrieve the current memory state.
+- **Parameters:** None (HTTP GET)
+- **Return Value:** JSON response with memory array
+- **Pre-conditions:** None
+- **Post-conditions:** Returns a JSON response with the current memory state
+
+##### 'load_memory()'
+- **Purpose:** API endpoint to load instructions into memory.
+- **Parameters:** JSON data with instructions array (HTTP POST)
+- **Return Value:** JSON response with success message
+- **Pre-conditions:** Request contains valid JSON with instructions
+- **Post-conditions:** Instructions are loaded into memory
+
+##### 'update_memory()'
+- **Purpose:** API endpoint to update a specific memory location.
+- **Parameters:** JSON data with address and value (HTTP POST)
+- **Return Value:** JSON response with update status
+- **Pre-conditions:** 
+  - Request contains valid JSON with address and value
+  - Address is valid (0-249)
+  - Value is in correct format (+/-NNNNNN)
+- **Post-conditions:** Memory at specified address is updated
+
+##### 'get_status()'
+- **Purpose:** API endpoint to retrieve accumulator and instruction pointer values.
+- **Parameters:** None (HTTP GET)
+- **Return Value:** JSON response with accumulator and instruction pointer values
+- **Pre-conditions:** None
+- **Post-conditions:** Returns JSON with current accumulator and instruction pointer values
+
+##### 'step_instruction()'
+- **Purpose:** API endpoint to execute the next instruction.
+- **Parameters:** JSON data with optional user input (HTTP POST)
+- **Return Value:** JSON response with execution result
+- **Pre-conditions:** None
+- **Post-conditions:** 
+  - Next instruction is executed
+  - Returns JSON with execution result and status
+
+##### 'load_file()'
+- **Purpose:** API endpoint to load a file into memory.
+- **Parameters:** File upload (HTTP POST)
+- **Return Value:** JSON response with load status and updated memory
+- **Pre-conditions:** 
+  - Request contains file upload
+  - File has valid content
+- **Post-conditions:** 
+  - File content is parsed and loaded into memory
+  - Returns JSON with success message and updated memory
+
+##### 'reset_system()'
+- **Purpose:** API endpoint to reset the UVSim system.
+- **Parameters:** None (HTTP POST)
+- **Return Value:** JSON response with reset status
+- **Pre-conditions:** None
+- **Post-conditions:** 
+  - System is reset
+  - Returns JSON with success message
+
+## Frontend JavaScript Functions
+
+**Purpose:** Provides the client-side functionality for the web-based GUI, including memory display, program execution control, and user interaction.
+
+### Key Functions:
+
+#### 'updateMemory(address, value)'
+- **Purpose:** Sends a request to update a specific memory location.
+- **Parameters:** 
+  - 'address' (int): The memory address to update
+  - 'value' (string): The new value for the memory location
+- **Pre-conditions:** 
+  - address is a valid memory location
+  - value is in the correct format
+- **Post-conditions:** 
+  - Memory is updated on the server
+  - Memory display is refreshed
+
+#### 'fetchMemory()'
+- **Purpose:** Retrieves the current memory state from the server and updates the UI.
+- **Parameters:** None
+- **Pre-conditions:** API server is accessible
+- **Post-conditions:** Memory display is updated with current values
+
+#### 'fetchStatus()'
+- **Purpose:** Retrieves the current accumulator and instruction pointer values.
+- **Parameters:** None
+- **Pre-conditions:** API server is accessible
+- **Post-conditions:** Status display is updated with current values
+
+#### 'executeInstruction(userInput = null)'
+- **Purpose:** Executes the next instruction and handles continuous program flow.
+- **Parameters:** 
+  - 'userInput' (string, optional): User input for read operations
+- **Pre-conditions:** None
+- **Post-conditions:** 
+  - Instruction is executed
+  - UI is updated
+  - Program continues execution if running
+
+#### 'stepInstruction(userInput = null)'
+- **Purpose:** Executes a single instruction and stops.
+- **Parameters:** 
+  - 'userInput' (string, optional): User input for read operations
+- **Pre-conditions:** None
+- **Post-conditions:** 
+  - Single instruction is executed
+  - UI is updated
+
+#### 'resetSystem()'
+- **Purpose:** Resets the UVSim system to its initial state.
+- **Parameters:** None
+- **Pre-conditions:** None
+- **Post-conditions:** 
+  - System is reset on the server
+  - UI is updated to reflect reset state
+
+#### 'loadFile()'
+- **Purpose:** Uploads and loads a file into memory.
+- **Parameters:** None (uses file input element)
+- **Pre-conditions:** A file is selected in the file input
+- **Post-conditions:** 
+  - File is uploaded and loaded into memory
+  - UI is updated
+
+## Main Application Components
+
+### Flask App (app.py)
+- **Purpose:** Main entry point for the Flask web application, registers routes and serves the frontend.
+
+### Run Script (run.py)
+- **Purpose:** Script to start the application, handles port configuration and debug mode.
+
