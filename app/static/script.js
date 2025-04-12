@@ -2,9 +2,10 @@ const API_BASE = '/api';
 
 let activeTabId = null; // Stores the ID of the currently active tab
 let tabs = []; // Array to store tab information
+let consoleMessages = {}; // Object to store console messages for each tab
 
 // Initial load
-window.onload = function() {
+window.onload = function () {
     // Check for existing tabs
     fetchTabs();
 };
@@ -17,7 +18,7 @@ function fetchTabs() {
         .then(data => {
             tabs = data.instances;
             renderTabs();
-            
+
             // If there are tabs, activate the first one
             if (tabs.length > 0) {
                 activateTab(tabs[0].tab_id);
@@ -32,12 +33,12 @@ function fetchTabs() {
 
 function renderTabs() {
     const tabsContainer = document.getElementById('program-tabs');
-    
+
     // Clear existing tabs, keeping only the "New Tab" button
     const newTabButton = document.getElementById('new-tab-button');
     tabsContainer.innerHTML = '';
     tabsContainer.appendChild(newTabButton);
-    
+
     // Add all tabs
     tabs.forEach(tab => {
         const tabElement = document.createElement('button');
@@ -45,12 +46,12 @@ function renderTabs() {
         if (tab.tab_id === activeTabId) {
             tabElement.classList.add('active');
         }
-        
+
         // Tab label
         const tabLabel = document.createElement('span');
         tabLabel.textContent = tab.name;
         tabElement.appendChild(tabLabel);
-        
+
         // Close button
         const closeButton = document.createElement('span');
         closeButton.classList.add('tab-close');
@@ -60,10 +61,10 @@ function renderTabs() {
             deleteTab(tab.tab_id);
         };
         tabElement.appendChild(closeButton);
-        
+
         // Tab click handler
         tabElement.onclick = () => activateTab(tab.tab_id);
-        
+
         // Insert tab before the New Tab button
         tabsContainer.insertBefore(tabElement, newTabButton);
     });
@@ -90,17 +91,33 @@ function createNewTab() {
 
 function activateTab(tabId) {
     activeTabId = tabId;
-    
+
     // Update UI to show this tab is active
     renderTabs();
-    
+
     // Show main content
     document.getElementById('no-tabs-message').style.display = 'none';
     document.getElementById('main-content').style.display = 'grid';
-    
-    // Clear console for the new tab
-    document.getElementById('execution-message').innerHTML = '';
-    
+
+    // Show console messages for this tab
+    const consoleElement = document.getElementById('execution-message');
+    consoleElement.innerHTML = '';
+
+    // Check if we have stored messages for this tab
+    if (consoleMessages[tabId]) {
+        // Add all stored messages back to the console
+        consoleMessages[tabId].forEach(message => {
+            const messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            consoleElement.appendChild(messageElement);
+        });
+
+        // Ensure console is scrolled to the bottom
+        setTimeout(() => {
+            consoleElement.scrollTop = consoleElement.scrollHeight;
+        }, 0);
+    }
+
     // Fetch the data for this tab
     fetchMemory();
 }
@@ -116,7 +133,7 @@ function deleteTab(tabId) {
             .then(data => {
                 // Remove the tab from our list
                 tabs = tabs.filter(tab => tab.tab_id !== tabId);
-                
+
                 // If we deleted the active tab, activate another one if available
                 if (tabId === activeTabId) {
                     if (tabs.length > 0) {
@@ -128,7 +145,7 @@ function deleteTab(tabId) {
                         document.getElementById('main-content').style.display = 'none';
                     }
                 }
-                
+
                 renderTabs();
             })
             .catch(error => console.error('Error deleting tab:', error));
@@ -137,16 +154,16 @@ function deleteTab(tabId) {
 
 function renameTab() {
     if (!activeTabId) return;
-    
+
     // Find the current tab name
     const currentTab = tabs.find(tab => tab.tab_id === activeTabId);
     if (!currentTab) return;
-    
+
     // Show rename modal with current name
     const modal = document.getElementById('rename-modal');
     const input = document.getElementById('tab-name-input');
     input.value = currentTab.name;
-    
+
     modal.classList.remove('hidden');
     modal.style.display = 'flex';
     input.focus();
@@ -158,9 +175,9 @@ function submitRename() {
         fetch(`${API_BASE}/rename_instance`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 tab_id: activeTabId,
-                name: newName 
+                name: newName
             })
         })
             .then(response => response.json())
@@ -188,14 +205,14 @@ function cancelRename() {
 
 function updateMemory(address, value) {
     if (!activeTabId) return;
-    
+
     fetch(`${API_BASE}/update_memory?tab_id=${activeTabId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
             tab_id: activeTabId,
-            address: address, 
-            value: value.trim() 
+            address: address,
+            value: value.trim()
         })
     })
         .then(response => response.json())
@@ -208,7 +225,7 @@ function updateMemory(address, value) {
 
 function fetchMemory() {
     if (!activeTabId) return;
-    
+
     fetch(`${API_BASE}/get_memory?tab_id=${activeTabId}&nocache=${new Date().getTime()}`)
         .then(response => response.json())
         .then(data => {
@@ -250,7 +267,7 @@ function fetchMemory() {
 
 function fetchStatus() {
     if (!activeTabId) return Promise.resolve({});
-    
+
     return fetch(`${API_BASE}/get_status?tab_id=${activeTabId}&nocache=${new Date().getTime()}`)
         .then(response => response.json())
         .then(data => {
@@ -266,24 +283,27 @@ function fetchStatus() {
 
 function executeInstruction(userInput = null) {
     if (!activeTabId) return;
-    
+
     isRunning = true; // Set running state
 
     fetch(`${API_BASE}/step_instruction`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
             tab_id: activeTabId,
-            input: userInput 
+            input: userInput
         })
     })
         .then(response => response.json())
         .then(data => {
             console.log(data.message);
 
-            if (data.message.includes("Input required") ||
-                data.message.includes("Output") ||
-                data.message.includes("Invalid") ||
+            // Only write Output messages and program halted to the console
+            if (data.message.includes("Output")) {
+                appendToConsole(data.message);
+            }
+            // Only show invalid instructions and program halted, NOT input required
+            else if (data.message.includes("Invalid") ||
                 data.message.includes("Program halted")) {
                 appendToConsole(data.message);
             }
@@ -311,7 +331,17 @@ function appendToConsole(message) {
     let newMessage = document.createElement('div');
     newMessage.textContent = message;
     consoleElement.appendChild(newMessage);
-    consoleElement.scrollTop = consoleElement.scrollHeight; // Auto-scroll to latest message
+
+    // Store the message in our tab-specific console messages
+    if (!consoleMessages[activeTabId]) {
+        consoleMessages[activeTabId] = [];
+    }
+    consoleMessages[activeTabId].push(message);
+
+    // Ensure auto-scrolling works consistently by using setTimeout
+    setTimeout(() => {
+        consoleElement.scrollTop = consoleElement.scrollHeight;
+    }, 0);
 }
 
 function showModal(mode = 'run') {
@@ -340,6 +370,18 @@ function submitInput() {
         return;
     }
 
+    // Validate input is a number within the allowed range
+    const numValue = Number(userInput);
+    if (isNaN(numValue)) {
+        alert("Please enter a valid number.");
+        return;
+    }
+
+    if (numValue > 999999 || numValue < -999999) {
+        alert("Input must be between -999999 and 999999.");
+        return;
+    }
+
     hideModal(); // Hide the modal
     userInputField.value = ""; // Clear input field after submission
     userInputField.removeAttribute('data-mode'); // Reset mode
@@ -354,7 +396,7 @@ function submitInput() {
 
 function resetSystem() {
     if (!activeTabId) return;
-    
+
     fetch(`${API_BASE}/reset`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -363,6 +405,12 @@ function resetSystem() {
         .then(response => response.json())
         .then(data => {
             console.log(data.message);
+
+            // Clear the console and stored messages for this tab
+            document.getElementById('execution-message').innerHTML = '';
+            consoleMessages[activeTabId] = [];
+
+            // Add reset message to console
             appendToConsole(data.message);
             fetchMemory();  // Refresh memory after reset
             fetchStatus();  // Refresh accumulator and instruction pointer
@@ -375,7 +423,7 @@ function loadFile() {
         alert("Please create a new program tab first before loading a file.");
         return;
     }
-    
+
     // Create a temporary file input element
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -432,13 +480,13 @@ function loadFile() {
 
 function stepInstruction(userInput = null) {
     if (!activeTabId) return;
-    
+
     fetch(`${API_BASE}/step_instruction`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
             tab_id: activeTabId,
-            input: userInput 
+            input: userInput
         })
     })
         .then(response => response.json())
@@ -447,6 +495,12 @@ function stepInstruction(userInput = null) {
 
             // Always append execution messages to console for better visibility
             appendToConsole(data.message);
+
+            // Additional scrolling for step function to ensure it scrolls properly
+            setTimeout(() => {
+                let consoleElement = document.getElementById('execution-message');
+                consoleElement.scrollTop = consoleElement.scrollHeight;
+            }, 10);
 
             fetchMemory(); // Update memory and highlight
 
@@ -464,7 +518,7 @@ function stepInstruction(userInput = null) {
 
 function saveFile() {
     if (!activeTabId) return;
-    
+
     // Create a temporary anchor element for saving
     const link = document.createElement('a');
 
@@ -484,7 +538,7 @@ function saveFile() {
 
             // Get the tab name for the filename
             const tabName = tabs.find(tab => tab.tab_id === activeTabId)?.name || 'program';
-            
+
             // Setup the download link
             link.href = url;
             link.download = `${tabName}.txt`; // Use tab name for the filename

@@ -18,6 +18,9 @@ class UVSimService:
         self.model.reset()
         # Only load up to 250 instructions
         for index, line in enumerate(instructions[:250]):
+            if len(line) == 5:
+                # Convert to 7 character format
+                line = f"{line[0]}0{line[1:3]}0{line[3:]}"
             self.model.memory[index] = line
             
     def reset(self):
@@ -51,7 +54,7 @@ class UVSimService:
                 self.model.instruction_pointer += 1
                 return {"message": f"Read {user_input} into memory[{operand}]"}
 
-            case "11":  # Write
+            case "011":  # Write
                 self.model.instruction_pointer += 1
                 return {"message": f"Output: {self.memory.write(operand)}"}
 

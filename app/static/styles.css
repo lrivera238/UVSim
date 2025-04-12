@@ -166,7 +166,6 @@ body {
     flex-direction: column;
     width: 100%;
     margin-top: 5px;
-    padding: 0 10px;
     align-items: flex-start;
 }
 
@@ -262,4 +261,14 @@ button:hover {
     font-family: "Courier New", monospace;
     border: 2px solid #000000;
     text-align: left;
+
+    /* Add these properties for automatic scrolling */
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-anchor: auto;
+}
+
+/* Adjust child elements to display correctly with column-reverse */
+.console-container>div {
+    order: 1;
 }
