@@ -29,6 +29,68 @@ body {
     border-radius: 5px;
 }
 
+/* Tabs styling */
+.tabs-container {
+    margin: 20px 0;
+}
+
+.tabs {
+    display: flex;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--secondary);
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.tab {
+    padding: 8px 20px;
+    margin-right: 5px;
+    background-color: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 5px 5px 0 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    min-width: 120px;
+}
+
+.tab.active {
+    background-color: var(--primary);
+}
+
+.tab-close {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.tab-close:hover {
+    color: white;
+}
+
+.new-tab-button {
+    padding: 8px 15px;
+    background-color: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.tab-content {
+    min-height: 50px;
+    text-align: center;
+}
+
+.no-tabs-message {
+    color: #ccc;
+    padding: 20px;
+}
+
+/* Main content area */
 .main-content {
     display: grid;
     grid-template-columns: auto 300px;
@@ -104,7 +166,6 @@ body {
     flex-direction: column;
     width: 100%;
     margin-top: 5px;
-    padding: 0 10px;
     align-items: flex-start;
 }
 
@@ -200,4 +261,14 @@ button:hover {
     font-family: "Courier New", monospace;
     border: 2px solid #000000;
     text-align: left;
+
+    /* Add these properties for automatic scrolling */
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-anchor: auto;
+}
+
+/* Adjust child elements to display correctly with column-reverse */
+.console-container>div {
+    order: 1;
 }

@@ -16,8 +16,11 @@ class UVSimService:
     def load_to_memory(self, instructions):
         """Load a list of instructions into memory."""
         self.model.reset()
-        # Only load up to 100 instructions
-        for index, line in enumerate(instructions[:100]):
+        # Only load up to 250 instructions
+        for index, line in enumerate(instructions[:250]):
+            if len(line) == 5:
+                # Convert to 7 character format
+                line = f"{line[0]}0{line[1:3]}0{line[3:]}"
             self.model.memory[index] = line
             
     def reset(self):
@@ -31,18 +34,19 @@ class UVSimService:
             return {"message": "End of program reached without HALT", "halt": True}
 
         instruction = self.model.memory[self.model.instruction_pointer]
-        if not instruction or len(instruction) != 5:
+        if not instruction or len(instruction) != 7:
+            # This is where we'd convert the old length to the new 6 length format. One length was added to opcode and operand.
             return {"message": f"Invalid instruction {instruction} at {self.model.instruction_pointer}", "halt": True}
 
         sign = instruction[0]
-        opcode = instruction[1:3]
-        operand = instruction[3:]
+        opcode = instruction[1:4]
+        operand = instruction[4:]
 
         if sign == "-":
             return {"message": f"Invalid instruction {instruction} at {self.model.instruction_pointer}", "halt": True}
 
         match opcode:
-            case "10":  # Read
+            case "010":  # Read
                 if user_input is None:
                     return {"message": f"Input required for memory[{operand}]", "waitForInput": True}
                 # Let ValueError propagate up for invalid input
@@ -50,32 +54,32 @@ class UVSimService:
                 self.model.instruction_pointer += 1
                 return {"message": f"Read {user_input} into memory[{operand}]"}
 
-            case "11":  # Write
+            case "011":  # Write
                 self.model.instruction_pointer += 1
                 return {"message": f"Output: {self.memory.write(operand)}"}
 
-            case "20":  # Load
+            case "020":  # Load
                 self.memory.load(operand)
-            case "21":  # Store
+            case "021":  # Store
                 self.memory.store(operand)
-            case "30":  # Add
+            case "030":  # Add
                 self.arithmetic.add(operand)
-            case "31":  # Subtract
+            case "031":  # Subtract
                 self.arithmetic.subtract(operand)
-            case "32":  # Divide
+            case "032":  # Divide
                 self.arithmetic.divide(operand)
-            case "33":  # Multiply
+            case "033":  # Multiply
                 self.arithmetic.multiply(operand)
-            case "40":  # Branch
+            case "040":  # Branch
                 self.branch.branch(operand)
                 return {"message": f"Branched to {operand}"}
-            case "41":  # Branch if Negative
+            case "041":  # Branch if Negative
                 if self.branch.branch_neg(operand):
                     return {"message": f"Branching to {operand} because accumulator is negative"}
-            case "42":  # Branch if Zero
+            case "042":  # Branch if Zero
                 if self.branch.branch_zero(operand):
                     return {"message": f"Branching to {operand} because accumulator is zero"}
-            case "43":  # Halt
+            case "043":  # Halt
                 return {"message": "Program halted.", "halt": True}
             case _:
                 return {"message": f"Invalid instruction {instruction} at {self.model.instruction_pointer}", "halt": True}
