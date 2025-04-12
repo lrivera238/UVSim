@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template
-from app.api.routes import uvsim_api, uvsim_model  # Import the UVSim model
+from app.api.routes import uvsim_api  # Remove the uvsim_model import
 
 app = Flask(__name__)
 

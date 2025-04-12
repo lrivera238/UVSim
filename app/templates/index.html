@@ -13,9 +13,24 @@
     <div class="background">
         <h1 class="title">UVSim Execution</h1>
 
-        <!-- Execution Message -->
+        <!-- Tabs Container -->
+        <div class="tabs-container">
+            <div class="tabs" id="program-tabs">
+                <!-- Tab buttons will be added here dynamically -->
+                <button id="new-tab-button" onclick="createNewTab()" class="new-tab-button">+ New Program</button>
+            </div>
+            
+            <!-- Tab Content (only one is visible at a time) -->
+            <div class="tab-content" id="tab-content">
+                <!-- Initial state when no tabs exist -->
+                <div class="no-tabs-message" id="no-tabs-message">
+                    <p>Click "+ New Program" to create a new program instance</p>
+                </div>
+            </div>
+        </div>
 
-        <div class="main-content">
+        <!-- Main Content Section (Hidden Until Tab is Selected) -->
+        <div class="main-content" id="main-content" style="display: none;">
             <div class="memory-wrapper">
                 <div class="memory-container" id="memoryContainer"></div>
                 <!-- Buttons Below Memory Container -->
@@ -28,6 +43,7 @@
                     <div class="button-row">
                         <button onclick="loadFile()" class="load-button">Load Program</button>
                         <button onclick="saveFile()" class="save-button">Save Program</button>
+                        <button onclick="renameTab()" class="rename-button">Rename Tab</button>
                     </div>
                 </div>
             </div>
@@ -69,13 +85,20 @@
                 </div>
             </div>
         </div>
-        <!--
-        <script>
-            const API_BASE = "{{ API_BASE }}"; // Flask injects API_BASE here
-            console.log("Using API:", API_BASE);
-        </script>-->
-    </div>
 
+        <!-- Rename Modal (Hidden by Default) -->
+        <div id="rename-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Rename Program</h3>
+                <p>Enter a new name:</p>
+                <input type="text" id="tab-name-input" placeholder="Enter program name">
+                <div class="modal-buttons">
+                    <button onclick="submitRename()">Submit</button>
+                    <button onclick="cancelRename()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
