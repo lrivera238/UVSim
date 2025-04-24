@@ -4,6 +4,11 @@
 
 UVSim is a web-based simulator for a basic machine language.
 
+App is being hosted in google cloud. These are the commands to build and push:
+"docker build -t us-west3-docker.pkg.dev/calm-metric-160019/uvsim-app/uvsim ."
+"docker push us-west3-docker.pkg.dev/calm-metric-160019/uvsim-app/uvsim"
+
+
 Access the application at: [https://uvsim-426884250334.us-central1.run.app/]
 
 Access the code base at: [https://github.com/lrivera238/UVSim/]
