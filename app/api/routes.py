@@ -118,9 +118,9 @@ def update_memory():
     if address < 0 or address >= len(instance['model'].memory):
         return jsonify({"error": "Invalid memory address"}), 400
 
-    # Validate memory format (+0000 to +9999 and -0000 to -9999)
-    if not isinstance(value, str) or len(value) != 5 or (value[0] not in ['+', '-']) or not value[1:].isdigit():
-        return jsonify({"error": "Invalid memory format. Must be +0000 to +9999 or -0000 to -9999"}), 400
+    # Validate memory format (+000000 to +999999 and -000000 to -999999)
+    if not isinstance(value, str) or len(value) != 7 or (value[0] not in ['+', '-']) or not value[1:].isdigit():
+        return jsonify({"error": "Invalid memory format. Must be +000000 to +999999 or -000000 to -999999"}), 400
 
     # Store the new value in memory
     instance['model'].memory[address] = value
